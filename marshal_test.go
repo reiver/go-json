@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/reiver/go-json"
+	"github.com/reiver/go-opt"
 )
 
 func TestMarshal(t *testing.T) {
@@ -289,6 +290,42 @@ func TestMarshal(t *testing.T) {
 				`,`+
 				`"Second":"12"`+
 			`}`,
+		},
+
+
+
+		{
+			Value: struct {
+				First  opt.Optional[string] `json:"first"`
+				Second opt.Optional[string] `json:"second,omitempty"`
+				Third  opt.Optional[string] `json:",omitempty"`
+			}{
+				First:  opt.Something("one"),
+				Second: opt.Something("TWO"),
+				Third:  opt.Something("3"),
+			},
+			Expected: `{"first":"one","second":"TWO","Third":"3"}`,
+		},
+		{
+			Value: struct {
+				First  opt.Optional[string] `json:"first"`
+				Second opt.Optional[string] `json:"second,omitempty"`
+				Third  opt.Optional[string] `json:",omitempty"`
+			}{
+				First:  opt.Something("one"),
+				Second: opt.Something("TWO"),
+			},
+			Expected: `{"first":"one","second":"TWO"}`,
+		},
+		{
+			Value: struct {
+				First  opt.Optional[string] `json:"first"`
+				Second opt.Optional[string] `json:"second,omitempty"`
+				Third  opt.Optional[string] `json:",omitempty"`
+			}{
+				First:  opt.Something("one"),
+			},
+			Expected: `{"first":"one"}`,
 		},
 	}
 
