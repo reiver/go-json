@@ -45,6 +45,7 @@ func (receiver *Usher) ImplantModifier(name string, fn ModifierFunc) {
 	})
 }
 
+// Marshal return the JSON version of 'value'.
 func (receiver *Usher) Marshal(value any) ([]byte, error) {
 	if nil == value {
 		return gojson.Marshal(value)
