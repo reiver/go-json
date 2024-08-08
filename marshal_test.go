@@ -262,6 +262,17 @@ func TestMarshal(t *testing.T) {
 				`"One":{"message":"ONE","note":"bing bong bang"}`+
 			`}`,
 		},
+		{
+			Value: struct {
+				One DemoType
+				Two DemoType `json:"two,omitempty"`
+			}{
+				One: DemoTypeOne(),
+			},
+			Expected: `{`+
+				`"One":{"message":"ONE","note":"bing bong bang"}`+
+			`}`,
+		},
 
 
 
