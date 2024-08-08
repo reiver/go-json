@@ -387,6 +387,117 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"first":"one"}`,
 		},
+
+
+
+
+
+
+
+
+		{
+			Value: []string{
+				"once",
+				"twice",
+				"thrice",
+				"fource",
+			},
+			Expected: `["once","twice","thrice","fource"]`,
+		},
+
+
+
+		{
+			Value: struct {
+				First  []string `json:"first"`
+				Second []string `json:"second,omitempty"`
+				Third  []string `json:"second,omitempty"`
+			}{
+				First: []string{
+					"once",
+					"twice",
+					"thrice",
+					"fource",
+				},
+				Second: []string{},
+			},
+			Expected: `{"first":["once","twice","thrice","fource"],"second":[]}`,
+		},
+
+
+
+
+
+
+
+
+		{
+			Value: []DemoType2(nil),
+			Expected: `[]`,
+		},
+		{
+			Value: []DemoType2{},
+			Expected: `[]`,
+		},
+		{
+			Value: []DemoType2{
+				DemoType2{
+					Apple:  opt.Something("ONE"),
+					Banana: opt.Something("TWO"),
+					Cherry: opt.Something("THREE"),
+				},
+			},
+			Expected: `[{"apple":"ONE","banana":"TWO","cherry":"THREE"}]`,
+		},
+		{
+			Value: []DemoType2{
+				DemoType2{
+					Apple:  opt.Something("ONE"),
+					Banana: opt.Something("TWO"),
+					Cherry: opt.Something("THREE"),
+				},
+				DemoType2{
+					Apple:  opt.Something("1"),
+					Banana: opt.Something("2"),
+				},
+			},
+			Expected: `[{"apple":"ONE","banana":"TWO","cherry":"THREE"},{"apple":"1","banana":"2"}]`,
+		},
+		{
+			Value: []DemoType2{
+				DemoType2{
+					Apple:  opt.Something("ONE"),
+					Banana: opt.Something("TWO"),
+					Cherry: opt.Something("THREE"),
+				},
+				DemoType2{
+					Apple:  opt.Something("1"),
+					Banana: opt.Something("2"),
+				},
+				DemoType2{
+					Apple:  opt.Something("one"),
+				},
+			},
+			Expected: `[{"apple":"ONE","banana":"TWO","cherry":"THREE"},{"apple":"1","banana":"2"},{"apple":"one"}]`,
+		},
+		{
+			Value: []DemoType2{
+				DemoType2{
+					Apple:  opt.Something("ONE"),
+					Banana: opt.Something("TWO"),
+					Cherry: opt.Something("THREE"),
+				},
+				DemoType2{
+					Apple:  opt.Something("1"),
+					Banana: opt.Something("2"),
+				},
+				DemoType2{
+					Apple:  opt.Something("one"),
+				},
+				DemoType2{},
+			},
+			Expected: `[{"apple":"ONE","banana":"TWO","cherry":"THREE"},{"apple":"1","banana":"2"},{"apple":"one"},{}]`,
+		},
 	}
 
 	for testNumber, test := range tests {

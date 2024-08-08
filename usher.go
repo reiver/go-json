@@ -48,7 +48,7 @@ func (receiver *Usher) ImplantModifier(name string, fn ModifierFunc) {
 // Marshal return the JSON version of 'value'.
 func (receiver *Usher) Marshal(value any) ([]byte, error) {
 	if nil == value {
-		return gojson.Marshal(value)
+		return []byte{'n','u','l','l'}, nil
 	}
 
 	switch casted := value.(type) {
@@ -71,11 +71,53 @@ func (receiver *Usher) Marshal(value any) ([]byte, error) {
 		switch reflectedType.Kind() {
 		case reflect.Struct:
 			return receiver.marshalStruct(value)
+		case reflect.Slice:
+			return receiver.marshalSlice(value)
 		default:
 			return gojson.Marshal(value)
 		}
 	}
 }
+
+func (receiver *Usher) marshalSlice(value any) ([]byte, error) {
+	if nil == value {
+		return []byte{'n','u','l','l'}, nil
+	}
+
+	var buffer [256]byte
+	var p []byte = buffer[0:0]
+
+	p = append(p, '[')
+
+	var reflectedValue = reflect.ValueOf(value)
+	var length int =  reflectedValue.Len()
+
+	var notempty bool
+
+	for i:=0; i<length; i++ {
+		elementReflectedValue := reflectedValue.Index(i)
+
+		if notempty {
+			p = append(p, ',')
+		}
+		{
+			var element any = elementReflectedValue.Interface()
+
+			bytes, err := receiver.Marshal(element)
+			if nil != err {
+				return nil, erorr.Errorf("json: problem marshaling element %d of the slice %T: %w", i, value, err)
+			}
+
+			p = append(p, bytes...)
+		}
+		notempty = true
+	}
+
+	p = append(p, ']')
+
+	return p, nil
+}
+
 
 func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 	if nil == value {
@@ -151,7 +193,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 					var fieldvalue any = reflectedStructFieldValue.Interface()
 
 					var err error
-					valuebytes, err = Marshal(fieldvalue)
+					valuebytes, err = receiver.Marshal(fieldvalue)
 					if nil != err {
 						if omitempty && erorr.Is(err, ErrEmpty("")) {
 		/////////////////////////////////////// CONTINUE
