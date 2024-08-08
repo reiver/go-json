@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/reiver/go-json"
+	"github.com/reiver/go-nul"
 	"github.com/reiver/go-opt"
 )
 
@@ -324,6 +325,65 @@ func TestMarshal(t *testing.T) {
 				Third  opt.Optional[string] `json:",omitempty"`
 			}{
 				First:  opt.Something("one"),
+			},
+			Expected: `{"first":"one"}`,
+		},
+
+
+
+		{
+			Value: struct {
+				First  nul.Nullable[string] `json:"first"`
+				Second nul.Nullable[string] `json:"second,omitempty"`
+				Third  nul.Nullable[string] `json:",omitempty"`
+			}{
+				First:  nul.Something("one"),
+				Second: nul.Something("TWO"),
+				Third:  nul.Something("3"),
+			},
+			Expected: `{"first":"one","second":"TWO","Third":"3"}`,
+		},
+		{
+			Value: struct {
+				First  nul.Nullable[string] `json:"first"`
+				Second nul.Nullable[string] `json:"second,omitempty"`
+				Third  nul.Nullable[string] `json:",omitempty"`
+			}{
+				First:  nul.Something("one"),
+				Second: nul.Something("TWO"),
+				Third:  nul.Null[string](),
+			},
+			Expected: `{"first":"one","second":"TWO","Third":null}`,
+		},
+		{
+			Value: struct {
+				First  nul.Nullable[string] `json:"first"`
+				Second nul.Nullable[string] `json:"second,omitempty"`
+				Third  nul.Nullable[string] `json:",omitempty"`
+			}{
+				First:  nul.Something("one"),
+				Second: nul.Something("TWO"),
+			},
+			Expected: `{"first":"one","second":"TWO"}`,
+		},
+		{
+			Value: struct {
+				First  nul.Nullable[string] `json:"first"`
+				Second nul.Nullable[string] `json:"second,omitempty"`
+				Third  nul.Nullable[string] `json:",omitempty"`
+			}{
+				First:  nul.Something("one"),
+				Second: nul.Null[string](),
+			},
+			Expected: `{"first":"one","second":null}`,
+		},
+		{
+			Value: struct {
+				First  nul.Nullable[string] `json:"first"`
+				Second nul.Nullable[string] `json:"second,omitempty"`
+				Third  nul.Nullable[string] `json:",omitempty"`
+			}{
+				First:  nul.Something("one"),
 			},
 			Expected: `{"first":"one"}`,
 		},
