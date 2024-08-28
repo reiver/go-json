@@ -108,28 +108,38 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 				var encoded []byte
 				var err error
 				switch casted := keyAny.(type) {
+				case encoding.TextMarshaler:
+					var bytes []byte
+					bytes, err = casted.MarshalText()
+					if nil != err {
+						return nil, erorr.Errorf("json: problem text-marshaling key of type %T (which also is a text-marshaler): %w", keyAny, err)
+					}
+					encoded, err = receiver.Marshal(string(bytes))
+					if nil != err {
+						return nil, erorr.Errorf("json: problem json-marshaling key of type %T (which also is a text-marshaler): %w", keyAny, err)
+					}
 				case fmt.Stringer:
 					encoded, err = receiver.Marshal(casted.String())
 					if nil != err {
-						return nil, erorr.Errorf("json: problem marshaling key of type %T: %w", keyAny, err)
+						return nil, erorr.Errorf("json: problem json-marshaling key of type %T (which also is a stringer): %w", keyAny, err)
 					}
 				case string:
 					encoded, err = receiver.Marshal(casted)
 					if nil != err {
-						return nil, erorr.Errorf("json: problem marshaling key of type %T: %w", keyAny, err)
+						return nil, erorr.Errorf("json: problem json-marshaling key of type %T (string): %w", keyAny, err)
 					}
 				case []byte:
 					encoded, err = receiver.Marshal(string(casted))
 					if nil != err {
-						return nil, erorr.Errorf("json: problem marshaling key of type %T: %w", keyAny, err)
+						return nil, erorr.Errorf("json: problem json-marshaling key of type %T ([]byte): %w", keyAny, err)
 					}
 				case []rune:
 					encoded, err = receiver.Marshal(string(casted))
 					if nil != err {
-						return nil, erorr.Errorf("json: problem marshaling key of type %T: %w", keyAny, err)
+						return nil, erorr.Errorf("json: problem json-marshaling key of type %T ([]rune): %w", keyAny, err)
 					}
 				default:
-					return nil, erorr.Errorf("json: cannot marshal a key of type %T", keyAny)
+					return nil, erorr.Errorf("json: cannot json-marshal a key of type %T", keyAny)
 				}
 				p = append(p, encoded...)
 				p = append(p, ':')
@@ -140,7 +150,7 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 
 				encoded, err := receiver.Marshal(mapValueAny)
 				if nil != err {
-					return nil, erorr.Errorf("json: cannot marshal a map-value of type %T", mapValueAny)
+					return nil, erorr.Errorf("json: cannot json-marshal a map-value of type %T", mapValueAny)
 				}
 				p = append(p, encoded...)
 			}
