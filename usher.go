@@ -3,6 +3,7 @@ package json
 import (
 	"encoding"
 	gojson "encoding/json"
+	"fmt"
 	"reflect"
 
 	"github.com/reiver/go-erorr"
@@ -73,10 +74,82 @@ func (receiver *Usher) Marshal(value any) ([]byte, error) {
 			return receiver.marshalStruct(value)
 		case reflect.Slice:
 			return receiver.marshalSlice(value)
+		case reflect.Map:
+			return receiver.marshalMap(value)
 		default:
 			return gojson.Marshal(value)
 		}
 	}
+}
+
+func (receiver *Usher) marshalMap(value any) ([]byte, error) {
+	if nil == value {
+		return []byte{'n','u','l','l'}, nil
+	}
+
+	var buffer [256]byte
+	var p []byte = buffer[0:0]
+
+	p = append(p, '{')
+
+	{
+		var reflectedValue = reflect.ValueOf(value)
+
+		var reflectedKeys []reflect.Value = reflectedValue.MapKeys()
+
+		for i, reflectedKey := range reflectedKeys {
+			if 0 < i {
+				p = append(p, ',')
+			}
+
+			{
+				keyAny := reflectedKey.Interface()
+
+				var encoded []byte
+				var err error
+				switch casted := keyAny.(type) {
+				case fmt.Stringer:
+					encoded, err = receiver.Marshal(casted.String())
+					if nil != err {
+						return nil, erorr.Errorf("json: problem marshaling key of type %T: %w", keyAny, err)
+					}
+				case string:
+					encoded, err = receiver.Marshal(casted)
+					if nil != err {
+						return nil, erorr.Errorf("json: problem marshaling key of type %T: %w", keyAny, err)
+					}
+				case []byte:
+					encoded, err = receiver.Marshal(string(casted))
+					if nil != err {
+						return nil, erorr.Errorf("json: problem marshaling key of type %T: %w", keyAny, err)
+					}
+				case []rune:
+					encoded, err = receiver.Marshal(string(casted))
+					if nil != err {
+						return nil, erorr.Errorf("json: problem marshaling key of type %T: %w", keyAny, err)
+					}
+				default:
+					return nil, erorr.Errorf("json: cannot marshal a key of type %T", keyAny)
+				}
+				p = append(p, encoded...)
+				p = append(p, ':')
+			}
+
+			{
+				mapValueAny := reflectedValue.MapIndex(reflectedKey).Interface()
+
+				encoded, err := receiver.Marshal(mapValueAny)
+				if nil != err {
+					return nil, erorr.Errorf("json: cannot marshal a map-value of type %T", mapValueAny)
+				}
+				p = append(p, encoded...)
+			}
+		}
+	}
+
+	p = append(p, '}')
+
+	return p, nil
 }
 
 func (receiver *Usher) marshalSlice(value any) ([]byte, error) {
