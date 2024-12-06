@@ -54,7 +54,7 @@ func (receiver *Usher) Marshal(value any) ([]byte, error) {
 
 	switch casted := value.(type) {
 	case Marshaler:
-			return casted.MarshalJSON()
+		return casted.MarshalJSON()
 	case encoding.TextMarshaler:
 		bytes, err := casted.MarshalText()
 		if nil != err {
