@@ -112,6 +112,14 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 		}
 
 		for i, reflectedKey := range reflectedKeys {
+
+			mapValueAny := reflectedValue.MapIndex(reflectedKey).Interface()
+
+			switch mapValueAny.(type) {
+			case OmitAlways:
+				continue
+			}
+
 			if 0 < i {
 				p = append(p, ',')
 			}
@@ -160,8 +168,6 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 			}
 
 			{
-				mapValueAny := reflectedValue.MapIndex(reflectedKey).Interface()
-
 				encoded, err := receiver.Marshal(mapValueAny)
 				if nil != err {
 					return nil, erorr.Errorf("json: cannot json-marshal a map-value of type %T", mapValueAny)
@@ -250,6 +256,12 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 			}
 
 			reflectedStructFieldValue := reflectedValue.Field(i)
+			reflectedStructFieldValueAny := reflectedStructFieldValue.Interface()
+
+			switch reflectedStructFieldValueAny.(type) {
+			case OmitAlways:
+				continue
+			}
 
 			var name string
 			var skip bool
@@ -276,7 +288,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 				continue
 			}
 			if omitempty {
-				switch casted := reflectedStructFieldValue.Interface().(type) {
+				switch casted := reflectedStructFieldValueAny.(type) {
 				case Emptier:
 					if casted.IsEmpty() {
 						continue
