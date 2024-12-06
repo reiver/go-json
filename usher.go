@@ -5,6 +5,7 @@ import (
 	gojson "encoding/json"
 	"fmt"
 	"reflect"
+	"sort"
 
 	"github.com/reiver/go-erorr"
 	"github.com/reiver/go-lck"
@@ -99,6 +100,16 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 		var reflectedValue = reflect.ValueOf(value)
 
 		var reflectedKeys []reflect.Value = reflectedValue.MapKeys()
+
+		{
+			var fn = func(index1, index2 int) bool {
+				value1 := reflectedKeys[index1]
+				value2 := reflectedKeys[index2]
+
+				return value1.String() < value2.String()
+			}
+			sort.Slice(reflectedKeys, fn)
+		}
 
 		for i, reflectedKey := range reflectedKeys {
 			if 0 < i {
