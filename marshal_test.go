@@ -3,6 +3,8 @@ package json_test
 import (
 	"testing"
 
+	"reflect"
+
 	"github.com/reiver/go-json"
 //	"github.com/reiver/go-nul"
 //	"github.com/reiver/go-opt"
@@ -504,6 +506,137 @@ func TestMarshal(t *testing.T) {
 			Expected: `[{"apple":"ONE","banana":"TWO","cherry":"THREE"},{"apple":"1","banana":"2"},{"apple":"one"},{}]`,
 		},
 */
+
+
+
+
+
+
+
+
+		{
+			Value: map[string]string{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]string{
+				"ONCE":"1",
+			},
+
+			Expected: `{"ONCE":"1"}`,
+		},
+		{
+			Value: map[string]string{
+				"ONCE":"1",
+				"TWICE":"2",
+			},
+
+			Expected: `{"ONCE":"1","TWICE":"2"}`,
+		},
+		{
+			Value: map[string]string{
+				"ONCE":"1",
+				"TWICE":"2",
+				"THRICE":"3",
+			},
+
+			Expected: `{"ONCE":"1","THRICE":"3","TWICE":"2"}`,
+		},
+		{
+			Value: map[string]string{
+				"ONCE":"1",
+				"TWICE":"2",
+				"THRICE":"3",
+				"FOURCE":"4",
+			},
+
+			Expected: `{"FOURCE":"4","ONCE":"1","THRICE":"3","TWICE":"2"}`,
+		},
+
+
+
+		{
+			Value: map[string]any{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]any{
+				"ONCE":"1",
+			},
+
+			Expected: `{"ONCE":"1"}`,
+		},
+		{
+			Value: map[string]any{
+				"ONCE":"1",
+				"TWICE":"2",
+			},
+
+			Expected: `{"ONCE":"1","TWICE":"2"}`,
+		},
+		{
+			Value: map[string]any{
+				"ONCE":"1",
+				"TWICE":"2",
+				"THRICE":"3",
+			},
+
+			Expected: `{"ONCE":"1","THRICE":"3","TWICE":"2"}`,
+		},
+		{
+			Value: map[string]any{
+				"ONCE":"1",
+				"TWICE":"2",
+				"THRICE":"3",
+				"FOURCE":"4",
+			},
+
+			Expected: `{"FOURCE":"4","ONCE":"1","THRICE":"3","TWICE":"2"}`,
+		},
+
+
+
+		{
+			Value: map[any]any{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[any]any{
+				"ONCE":"1",
+			},
+
+			Expected: `{"ONCE":"1"}`,
+		},
+		{
+			Value: map[any]any{
+				"ONCE":"1",
+				"TWICE":"2",
+			},
+
+			Expected: `{"ONCE":"1","TWICE":"2"}`,
+		},
+		{
+			Value: map[any]any{
+				"ONCE":"1",
+				"TWICE":"2",
+				"THRICE":"3",
+			},
+
+			Expected: `{"ONCE":"1","THRICE":"3","TWICE":"2"}`,
+		},
+		{
+			Value: map[any]any{
+				"ONCE":"1",
+				"TWICE":"2",
+				"THRICE":"3",
+				"FOURCE":"4",
+			},
+
+			Expected: `{"FOURCE":"4","ONCE":"1","THRICE":"3","TWICE":"2"}`,
+		},
 	}
 
 	for testNumber, test := range tests {
@@ -527,6 +660,7 @@ func TestMarshal(t *testing.T) {
 				t.Logf("EXPECTED:\n%s", expected)
 				t.Logf("ACTUAL:\n%s", actual)
 				t.Logf("VALUE: (%T) %#v", test.Value, test.Value)
+				t.Logf("VALUE-KIND: %s", reflect.TypeOf(test.Value).Kind())
 				continue
 			}
 		}
