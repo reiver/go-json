@@ -134,6 +134,27 @@ func TestMergeAndMarshal(t *testing.T) {
 			},
 			Expected: []byte(`{"banana":2,"cherry":true,"once":"","twice":202,"thrice":true,"fource":"4","m-k1":"v-1"}`),
 		},
+
+
+
+		{
+			Values: []any{
+				map[string]string{},
+				struct{}{},
+				struct {
+					one string
+					two int
+					three string
+				}{},
+				struct {
+					Apple  string `json:",omitempty"`
+					Banana int    `json:",omitempty"`
+					Cherry string `json:"cherry,omitempty"`
+					Date struct{} `json:",omitempty"`
+				}{},
+			},
+			Expected: []byte(`{}`),
+		},
 	}
 
 	for testNumber, test := range tests {
