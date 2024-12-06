@@ -16,6 +16,7 @@ func TestMarshal(t *testing.T) {
 		Value any
 		Expected string
 	}{
+		// 0
 		{
 			Value:     struct{}{},
 			Expected: `{}`,
@@ -23,10 +24,12 @@ func TestMarshal(t *testing.T) {
 
 
 
+		// 1
 		{
 			Value:     false,
 			Expected: "false",
 		},
+		// 2
 		{
 			Value:     true,
 			Expected: "true",
@@ -34,39 +37,48 @@ func TestMarshal(t *testing.T) {
 
 
 
+		// 3
 		{
 			Value: uint64(0),
 			Expected:    "0",
 		},
+		// 4
 		{
 			Value: uint64(1),
 			Expected:    "1",
 		},
+		// 5
 		{
 			Value: uint64(2),
 			Expected:    "2",
 		},
+		// 6
 		{
 			Value: uint64(3),
 			Expected:    "3",
 		},
+		// 7
 		{
 			Value: uint64(4),
 			Expected:    "4",
 		},
+		// 8
 		{
 			Value: uint64(5),
 			Expected:    "5",
 		},
 
+		// 9
 		{
 			Value: uint64(254),
 			Expected:    "254",
 		},
+		// 10
 		{
 			Value: uint64(255),
 			Expected:    "255",
 		},
+		// 11
 		{
 			Value: uint64(256),
 			Expected:    "256",
@@ -75,23 +87,28 @@ func TestMarshal(t *testing.T) {
 
 
 
+		// 12
 		{
 			Value:     "",
 			Expected: `""`,
 		},
 
+		// 13
 		{
 			Value:     "once",
 			Expected: `"once"`,
 		},
+		// 14
 		{
 			Value:     "twice",
 			Expected: `"twice"`,
 		},
+		// 15
 		{
 			Value:     "thrice",
 			Expected: `"thrice"`,
 		},
+		// 16
 		{
 			Value:     "fource",
 			Expected: `"fource"`,
@@ -99,6 +116,7 @@ func TestMarshal(t *testing.T) {
 
 
 
+		// 17
 		{
 			Value: struct {
 				Apple  bool
@@ -111,6 +129,7 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"Apple":true,"Banana":-1,"Cherry":"🙂"}`,
 		},
+		// 18
 		{
 			Value: struct {
 				Apple  bool   `json:"apple"`
@@ -126,6 +145,7 @@ func TestMarshal(t *testing.T) {
 
 
 
+		// 19
 		{
 			Value: struct {
 				Apple  bool   `json:"-"`
@@ -138,6 +158,7 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"banana":-1,"cherry":"🙂"}`,
 		},
+		// 20
 		{
 			Value: struct {
 				Apple  bool   `json:"-,"`
@@ -153,6 +174,7 @@ func TestMarshal(t *testing.T) {
 
 
 
+		// 21
 		{
 			Value: struct {
 				A any
@@ -168,6 +190,7 @@ func TestMarshal(t *testing.T) {
 
 
 
+		// 22
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -182,6 +205,7 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"-":true,"twice":-1,"thrice":"🙂","fource":"something"}`,
 		},
+		// 23
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -196,6 +220,7 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"twice":-1,"thrice":"🙂","fource":"something"}`,
 		},
+		// 24
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -210,6 +235,7 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"-":true,"thrice":"🙂","fource":"something"}`,
 		},
+		// 25
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -224,6 +250,7 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"-":true,"twice":-1,"fource":"something"}`,
 		},
+		// 26
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -241,6 +268,7 @@ func TestMarshal(t *testing.T) {
 
 
 
+		// 27
 		{
 			Value: struct {
 				One DemoType
@@ -255,6 +283,7 @@ func TestMarshal(t *testing.T) {
 				`"Two":{"message":"TWO","note":"bing bong bang"}`+
 			`}`,
 		},
+		// 28
 		{
 			Value: struct {
 				One DemoType
@@ -266,6 +295,7 @@ func TestMarshal(t *testing.T) {
 				`"One":{"message":"ONE","note":"bing bong bang"}`+
 			`}`,
 		},
+		// 29
 		{
 			Value: struct {
 				One DemoType
@@ -280,6 +310,7 @@ func TestMarshal(t *testing.T) {
 
 
 
+		// 30
 		{
 			Value: struct {
 				First  int `json:"first,string"`
