@@ -692,6 +692,7 @@ func TestMarshal(t *testing.T) {
 				t.Logf("ACTUAL:\n%s", actual)
 				t.Logf("VALUE: (%T) %#v", test.Value, test.Value)
 				t.Logf("VALUE-KIND: %s", reflect.TypeOf(test.Value).Kind())
+				t.Logf("VALUE-TYPE: %T", test.Value)
 				continue
 			}
 		}
