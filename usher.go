@@ -72,6 +72,7 @@ func (receiver *Usher) Marshal(value any) ([]byte, error) {
 		}
 
 		switch reflectedType.Kind() {
+//@TODO: array
 		case reflect.Struct:
 			return receiver.marshalStruct(value)
 		case reflect.Slice:
