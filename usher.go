@@ -264,6 +264,17 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 				continue
 			}
 			if omitempty {
+				switch casted := reflectedStructFieldValue.Interface().(type) {
+				case Emptier:
+					if casted.IsEmpty() {
+						continue
+					}
+				case Nothinger:
+					if casted.IsNothing() {
+						continue
+					}
+				}
+
 				var empty reflect.Value = reflect.Zero(reflectedStructFieldType.Type)
 
 				if reflect.DeepEqual(empty.Interface(), reflectedStructFieldValue.Interface()) {
