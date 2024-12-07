@@ -698,6 +698,24 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"apple":"one","cherry":5}`,
 		},
+
+
+		{
+			Value: struct{
+				Once     string `json:"once,omitempty"`
+				Twice  []string `json:"twice,omitempty"`
+				Thrice []string `json:"thrice,omitempty"`
+				Fource []string `json:"fource,omitempty"`
+				End      string `json:"end"`
+			}{
+				Once:   "not empty",
+				Twice:  nil,
+				Thrice: []string(nil),
+				Fource: []string{},
+				End: "here",
+			},
+			Expected: `{"once":"not empty","end":"here"}`,
+		},
 	}
 
 	for testNumber, test := range tests {
