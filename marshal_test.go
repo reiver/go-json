@@ -452,7 +452,7 @@ func TestMarshal(t *testing.T) {
 			Value: struct {
 				First  []string `json:"first"`
 				Second []string `json:"second,omitempty"`
-				Third  []string `json:"second,omitempty"`
+				Third  []string `json:"third,omitempty"`
 			}{
 				First: []string{
 					"once",
@@ -462,7 +462,27 @@ func TestMarshal(t *testing.T) {
 				},
 				Second: []string{},
 			},
-			Expected: `{"first":["once","twice","thrice","fource"],"second":[]}`,
+			Expected: `{"first":["once","twice","thrice","fource"]}`,
+		},
+
+
+
+		{
+			Value: struct {
+				First  []string `json:"first"`
+				Second []string `json:"second,omitempty"`
+				Third  []string `json:"third,omitempty"`
+			}{
+				First: []string{
+					"once",
+					"twice",
+					"thrice",
+					"fource",
+				},
+				Second: []string{},
+				Third:  []string{"hi"},
+			},
+			Expected: `{"first":["once","twice","thrice","fource"],"third":["hi"]}`,
 		},
 
 
