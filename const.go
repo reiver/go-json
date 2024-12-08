@@ -79,6 +79,7 @@ func (Const[T]) JSONConst() {
 	// nothing here
 }
 
+// See the [Constantizer] interface documentation for details.
 func (Const[T]) DecodeFromString(str string) (any, error) {
 	var t T
 	var a any = t
