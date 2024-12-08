@@ -41,11 +41,25 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 			}
 
 			reflectedStructFieldValue := reflectedValue.Field(i)
-			reflectedStructFieldValueAny := reflectedStructFieldValue.Interface()
+			structFieldValueAny := reflectedStructFieldValue.Interface()
 
-			switch reflectedStructFieldValueAny.(type) {
+			switch casted := structFieldValueAny.(type) {
 			case OmitAlways:
 				continue
+			case Constantizer:
+				const tagName string = "json.value"
+
+				tag, found := reflectedStructFieldType.Tag.Lookup(tagName)
+				if !found {
+					continue
+				}
+
+				value, err := casted.DecodeFromString(tag)
+				if nil != err {
+					return nil, erorr.Errorf("json: problem decoding '%s' struct-field tag on struct-field of type %T: %w", tagName, casted, err)
+				}
+
+				structFieldValueAny = value
 			}
 
 			var name string
@@ -73,7 +87,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 				continue
 			}
 			if omitempty {
-				switch casted := reflectedStructFieldValueAny.(type) {
+				switch casted := structFieldValueAny.(type) {
 				case Emptier:
 					if casted.IsEmpty() {
 						continue
@@ -86,7 +100,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 
 				var empty reflect.Value = reflect.Zero(reflectedStructFieldType.Type)
 
-				if reflect.DeepEqual(empty.Interface(), reflectedStructFieldValue.Interface()) {
+				if reflect.DeepEqual(empty.Interface(), structFieldValueAny) {
 		/////////////////////// CONTINUE
 					continue
 				}
@@ -103,16 +117,14 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 			{
 				var valuebytes []byte
 				{
-					var fieldvalue any = reflectedStructFieldValue.Interface()
-
 					var err error
-					valuebytes, err = receiver.Marshal(fieldvalue)
+					valuebytes, err = receiver.Marshal(structFieldValueAny)
 					if nil != err {
 						if omitempty && erorr.Is(err, ErrEmpty("")) {
 		/////////////////////////////////////// CONTINUE
 							continue
 						}
-						return nil, erorr.Errorf("json: problem marshaling %T into JSON: %w", fieldvalue, err)
+						return nil, erorr.Errorf("json: problem marshaling %T into JSON: %w", structFieldValueAny, err)
 					}
 
 					for _, modifierName := range modifiers {
@@ -139,7 +151,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 		/////////////////////////////////////////////////////// CONTINUE
 									continue
 								}
-								return nil, erorr.Errorf("json: problem marshaling %T into JSON using modifier %q: %w", fieldvalue, modifierName, err)
+								return nil, erorr.Errorf("json: problem marshaling %T into JSON using modifier %q: %w", structFieldValueAny, modifierName, err)
 							}
 						}
 					}
