@@ -9,4 +9,5 @@ var (
 
 func init() {
 	DefaultUsher.ImplantModifier("string", StringModifierFunc)
+	DefaultUsher.ImplantModifier("bare", BareModifierFunc)
 }
