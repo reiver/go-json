@@ -18,6 +18,22 @@ type Constantizer interface {
 	//	}
 	JSONConst()
 
+	// DecodeFromString decodes the value of a string to the underlying type.
+	//
+	// The value will come from the value of the struct tag: "json.value".
+	//
+	//
+	// For example:
+	//
+	//	type MyType struct {
+	//		
+	//		// ...
+	//		
+	//		MyField json.Const[uint64] `json:"myfield" json.value:"123"`
+	//		
+	//		// ...
+	//		
+	//	}
 	DecodeFromString(string)(any,error)
 }
 
