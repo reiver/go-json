@@ -8,7 +8,16 @@ import (
 )
 
 type Constantizer interface {
+
+	// JSONConst is a dummy-method used (along with the method DecodeFromString) to specify that something is of inteface type json.Constantizer.
+	//
+	// An implementation of it will look similar to this:
+	//
+	//	func (receiver MyType) JSONConst() {
+	//		// nothing here
+	//	}
 	JSONConst()
+
 	DecodeFromString(string)(any,error)
 }
 
@@ -49,6 +58,7 @@ var _ Constantizer = Const[uint16]{}
 var _ Constantizer = Const[uint32]{}
 var _ Constantizer = Const[uint64]{}
 
+// See the [Constantizer] interface documentation for details on why this exists.
 func (Const[T]) JSONConst() {
 	// nothing here
 }
