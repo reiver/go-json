@@ -30,8 +30,8 @@ type Constantizer interface {
 //		GivenName               string  `json:"given-name"`
 //		AdditionalNames       []string  `json:"additional-names,omitempty"`
 //		FamilyName              string  `json:"family-name"`
-//		HomeCountry  json.Const[string] `json:"home-country"  json.value:"Canada"`
-//		HomeProvince json.Const[string] `json:"home-province" json.value:"Manitoba"`
+//		HomeCountry  json.Const[string] `json:"home-country"  json.value:"Canada"`   // <----------
+//		HomeProvince json.Const[string] `json:"home-province" json.value:"Manitoba"` // <----------
 //		HomeCity                string  `json:"home-city"`
 //	}
 type Const[T any] struct{}
