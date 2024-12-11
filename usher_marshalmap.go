@@ -29,7 +29,17 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 				value1 := reflectedKeys[index1]
 				value2 := reflectedKeys[index2]
 
-				return value1.String() < value2.String()
+				var str1 string = value1.String()
+				var str2 string = value2.String()
+
+				if str, casted := value1.Interface().(string); casted {
+					str1 = str
+				}
+				if str, casted := value2.Interface().(string); casted {
+					str2 = str
+				}
+
+				return str1 < str2
 			}
 			sort.Slice(reflectedKeys, fn)
 		}
