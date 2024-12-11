@@ -1,7 +1,6 @@
 package json
 
 import (
-	gojson "encoding/json"
 	"reflect"
 
 	"github.com/reiver/go-erorr"
@@ -158,15 +157,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 
 				}
 
-				var namebytes []byte
-				{
-					var err error
-
-					namebytes, err = gojson.Marshal(name)
-					if nil != err {
-						return nil, erorr.Errorf("json: problem marshaling string %q into JSON", name)
-					}
-				}
+				var namebytes []byte = MarshalString(name)
 
 				if notempty {
 					p = append(p, ',')
