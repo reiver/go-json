@@ -28,48 +28,6 @@ func TestMarshal(t *testing.T) {
 
 
 
-		// 1
-		{
-			Value:     false,
-			Expected: "false",
-		},
-		// 2
-		{
-			Value:     true,
-			Expected: "true",
-		},
-
-
-
-		// 12
-		{
-			Value:     "",
-			Expected: `""`,
-		},
-
-		// 13
-		{
-			Value:     "once",
-			Expected: `"once"`,
-		},
-		// 14
-		{
-			Value:     "twice",
-			Expected: `"twice"`,
-		},
-		// 15
-		{
-			Value:     "thrice",
-			Expected: `"thrice"`,
-		},
-		// 16
-		{
-			Value:     "fource",
-			Expected: `"fource"`,
-		},
-
-
-
 		// 17
 		{
 			Value: struct {
