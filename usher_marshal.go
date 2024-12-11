@@ -7,6 +7,69 @@ import (
 )
 
 // Marshal returns the JSON version of 'value'.
+//
+// omitempty
+//
+// For Go structs, if a field in the struct includes the struct-tag `omitempty`, then —
+// Marshal will NOT include its in the resulting JSON if its Go value is empty.
+//
+// For example, consider:
+//
+//	type MyStruct struct {
+//		Once   string
+//		Twice  string `json:"twice,omitempty"` // <---------
+//		Thrice string `json:"thrice"`
+//		Fource string `json:",omitempty"`      // <---------
+//	}
+//
+// Note that field `Twice` and field `Fource` both have `omitempty` in their struct-tags.
+// So, if their values are empty, then the resulting JSON will omit them.
+//
+// For example, this:
+//
+//	var value MyStruct
+//
+// Would (conceptually) result in:
+//
+//	{
+//		"Once":   "",
+//		"thrice": ""
+//	}
+//
+// And, for example, this:
+//
+//	var value = MyStruct{
+//		Once:   "",
+//		Twice:  "",
+//		Thrice: "",
+//		Fource: ""
+//	}
+//
+// Would also (conceptually) result in:
+//
+//	{
+//		"Once":   "",
+//		"thrice": ""
+//	}
+//
+// And also, for example, this:
+//
+//	var value = MyStruct{
+//		Once:   "first",
+//		Twice:  "second",
+//		Thrice: "third",
+//		Fource: "fourth"
+//	}
+//
+// Would (conceptually) result in:
+//
+//	{
+//		"Once":   "first",
+//		"twice":  "second",
+//		"thrice": "third",
+//		"Fource": "forth"
+//	}
+//
 func (receiver *Usher) Marshal(value any) ([]byte, error) {
 	if nil == value {
 		return []byte{'n','u','l','l'}, nil
