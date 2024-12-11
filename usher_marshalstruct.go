@@ -119,11 +119,11 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 					var err error
 					valuebytes, err = receiver.Marshal(structFieldValueAny)
 					if nil != err {
-						if omitempty && erorr.Is(err, ErrEmpty("")) {
+						if _, isErrorEmpty := err.(ErrorEmpty) ; omitempty && isErrorEmpty {
 		/////////////////////////////////////// CONTINUE
 							continue
 						}
-						return nil, erorr.Errorf("json: problem marshaling %T into JSON: %w", structFieldValueAny, err)
+						return nil, erorr.Errorf("json: [1] problem marshaling %T into JSON: %w", structFieldValueAny, err)
 					}
 
 					for _, modifierName := range modifiers {
@@ -146,11 +146,11 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 						if nil != fn {
 							valuebytes, err = fn(valuebytes)
 							if nil != err {
-								if omitempty && erorr.Is(err, ErrEmpty("")) {
+								if _, isErrorEmpty := err.(ErrorEmpty) ; omitempty && isErrorEmpty {
 		/////////////////////////////////////////////////////// CONTINUE
 									continue
 								}
-								return nil, erorr.Errorf("json: problem marshaling %T into JSON using modifier %q: %w", structFieldValueAny, modifierName, err)
+								return nil, erorr.Errorf("json: [2] problem marshaling %T into JSON using modifier %q: %w", structFieldValueAny, modifierName, err)
 							}
 						}
 					}
