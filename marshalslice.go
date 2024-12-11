@@ -6,7 +6,12 @@ import (
 	"github.com/reiver/go-erorr"
 )
 
-func (receiver *Usher) marshalSlice(value any) ([]byte, error) {
+// MarshalString returns the JSON version of a Go string.
+func MarshalSlice[T any](value []T) ([]byte, error) {
+	return marshalSlice(value, Marshal)
+}
+
+func marshalSlice(value any, marshalFunc func(any)([]byte, error)) ([]byte, error) {
 	if nil == value {
 		return []byte{'n','u','l','l'}, nil
 	}
@@ -30,7 +35,7 @@ func (receiver *Usher) marshalSlice(value any) ([]byte, error) {
 		{
 			var element any = elementReflectedValue.Interface()
 
-			bytes, err := receiver.Marshal(element)
+			bytes, err := marshalFunc(element)
 			if nil != err {
 				return nil, erorr.Errorf("json: problem marshaling element %d of the slice %T: %w", i, value, err)
 			}

@@ -128,7 +128,7 @@ func (receiver *Usher) Marshal(value any) ([]byte, error) {
 			return receiver.marshalStruct(value)
 //@TODO: array
 		case reflect.Slice:
-			return receiver.marshalSlice(value)
+			return marshalSlice(value, receiver.Marshal)
 		case reflect.Map:
 			return receiver.marshalMap(value)
 		default:
