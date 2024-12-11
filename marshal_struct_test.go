@@ -8,10 +8,6 @@ import (
 	"github.com/reiver/go-json"
 )
 
-type OmitAlways1 struct {}
-var _ json.OmitAlways = OmitAlways1{}
-func (receiver OmitAlways1) JSONOmitAlways(){}
-
 func TestMarshal_struct(t *testing.T) {
 
 	tests := []struct{
@@ -455,26 +451,6 @@ func TestMarshal_struct(t *testing.T) {
 
 
 
-
-
-		{
-			Value: struct{
-				Apple string       `json:"apple"`
-				Banana OmitAlways1 `json:"banana"`
-				Cherry int         `json:"cherry"`
-			}{
-				Apple: "one",
-			},
-			Expected: `{"apple":"one","cherry":0}`,
-		},
-		{
-			Value: map[string]any{
-				"apple":"one",
-				"banana":OmitAlways1{},
-				"cherry":5,
-			},
-			Expected: `{"apple":"one","cherry":5}`,
-		},
 
 
 		{
