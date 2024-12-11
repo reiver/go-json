@@ -6,8 +6,6 @@ import (
 	"reflect"
 
 	"github.com/reiver/go-json"
-//	"github.com/reiver/go-nul"
-//	"github.com/reiver/go-opt"
 )
 
 func TestMarshal_map(t *testing.T) {
@@ -17,10 +15,143 @@ func TestMarshal_map(t *testing.T) {
 		Expected string
 	}{
 		{
+			Value: map[string]bool(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int8(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int16(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int32(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int64(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]string(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]uint(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]uint8(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]uint16(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]uint32(nil),
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]uint64(nil),
+
+			Expected: `{}`,
+		},
+
+
+
+
+
+
+
+
+
+		{
+			Value: map[string]bool{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int8{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int16{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int32{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]int64{},
+
+			Expected: `{}`,
+		},
+		{
 			Value: map[string]string{},
 
 			Expected: `{}`,
 		},
+		{
+			Value: map[string]uint{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]uint8{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]uint16{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]uint32{},
+
+			Expected: `{}`,
+		},
+		{
+			Value: map[string]uint64{},
+
+			Expected: `{}`,
+		},
+
+
+
+
+
+
+
+
+
 		{
 			Value: map[string]string{
 				"ONCE":"1",
@@ -138,6 +269,23 @@ func TestMarshal_map(t *testing.T) {
 			},
 
 			Expected: `{"FOURCE":"4","ONCE":"1","THRICE":"3","TWICE":"2"}`,
+		},
+
+
+
+
+
+
+
+
+		{
+			Value: map[string]any{
+				"apple":true,
+				"banana":int(-5),
+				"cherry":"5",
+				"date":uint(5),
+			},
+			Expected: `{"apple":true,"banana":-5,"cherry":"5","date":5}`,
 		},
 	}
 
