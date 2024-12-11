@@ -70,6 +70,18 @@ import (
 //		"Fource": "forth"
 //	}
 //
+// Custom types can also make use of [Emptier] or [Nothinger] to specify when they are empty.
+// For example:
+//
+//	type MyStruct struct {
+//		// ...
+//	}
+//	
+//	func (receiver MyStruct) IsEmpty() bool {
+//		// ...
+//	}
+//
+// Marshal will call IsEmpty, if a custom type has it, to check whether the custom type is `empty` or not, for the purposes of `omitempty`.
 func (receiver *Usher) Marshal(value any) ([]byte, error) {
 	if nil == value {
 		return []byte{'n','u','l','l'}, nil
