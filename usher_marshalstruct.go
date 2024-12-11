@@ -123,7 +123,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 		/////////////////////////////////////// CONTINUE
 							continue
 						}
-						return nil, erorr.Errorf("json: [1] problem marshaling %T into JSON: %w", structFieldValueAny, err)
+						return nil, erorr.Errorf("json: problem marshaling %T into JSON: %w", structFieldValueAny, err)
 					}
 
 					for _, modifierName := range modifiers {
@@ -150,7 +150,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 		/////////////////////////////////////////////////////// CONTINUE
 									continue
 								}
-								return nil, erorr.Errorf("json: [2] problem marshaling %T into JSON using modifier %q: %w", structFieldValueAny, modifierName, err)
+								return nil, erorr.Errorf("json: problem marshaling %T into JSON using modifier %q: %w", structFieldValueAny, modifierName, err)
 							}
 						}
 					}
