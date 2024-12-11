@@ -806,7 +806,7 @@ func TestMarshal_int64(t *testing.T) {
 			expected := test.Expected
 
 			if expected != actual {
-				t.Errorf("For test #%d, the actual json-marshaled is not what was expected.", testNumber)
+				t.Errorf("For test #%d, the actual json-marshaled value for the %T is not what was expected.", testNumber, test.Value)
 				t.Logf("EXPECTED:\n%s", expected)
 				t.Logf("ACTUAL:\n%s", actual)
 				t.Logf("EXPECTED: %q", expected)
