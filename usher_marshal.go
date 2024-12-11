@@ -25,6 +25,17 @@ func (receiver *Usher) Marshal(value any) ([]byte, error) {
 		return gojson.Marshal(str)
 	case string:
 		return MarshalString(casted), nil
+	case int:
+		return MarshalInt(casted), nil
+	case int8:
+		return MarshalInt8(casted), nil
+	case int16:
+		return MarshalInt16(casted), nil
+	case int32:
+		return MarshalInt32(casted), nil
+	case int64:
+		return MarshalInt64(casted), nil
+
 	default:
 		reflectedType := reflect.TypeOf(value)
 		if nil == reflectedType {
