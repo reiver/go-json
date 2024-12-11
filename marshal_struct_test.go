@@ -6,21 +6,18 @@ import (
 	"reflect"
 
 	"github.com/reiver/go-json"
-//	"github.com/reiver/go-nul"
-//	"github.com/reiver/go-opt"
 )
 
 type OmitAlways1 struct {}
 var _ json.OmitAlways = OmitAlways1{}
 func (receiver OmitAlways1) JSONOmitAlways(){}
 
-func TestMarshal(t *testing.T) {
+func TestMarshal_struct(t *testing.T) {
 
 	tests := []struct{
 		Value any
 		Expected string
 	}{
-		// 0
 		{
 			Value:     struct{}{},
 			Expected: `{}`,
@@ -28,7 +25,6 @@ func TestMarshal(t *testing.T) {
 
 
 
-		// 17
 		{
 			Value: struct {
 				Apple  bool
@@ -41,7 +37,6 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"Apple":true,"Banana":-1,"Cherry":"🙂"}`,
 		},
-		// 18
 		{
 			Value: struct {
 				Apple  bool   `json:"apple"`
@@ -57,7 +52,6 @@ func TestMarshal(t *testing.T) {
 
 
 
-		// 19
 		{
 			Value: struct {
 				Apple  bool   `json:"-"`
@@ -70,7 +64,6 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"banana":-1,"cherry":"🙂"}`,
 		},
-		// 20
 		{
 			Value: struct {
 				Apple  bool   `json:"-,"`
@@ -86,7 +79,6 @@ func TestMarshal(t *testing.T) {
 
 
 
-		// 21
 		{
 			Value: struct {
 				A any
@@ -102,7 +94,6 @@ func TestMarshal(t *testing.T) {
 
 
 
-		// 22
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -117,7 +108,6 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"-":true,"twice":-1,"thrice":"🙂","fource":"something"}`,
 		},
-		// 23
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -132,7 +122,6 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"twice":-1,"thrice":"🙂","fource":"something"}`,
 		},
-		// 24
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -147,7 +136,6 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"-":true,"thrice":"🙂","fource":"something"}`,
 		},
-		// 25
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -162,7 +150,6 @@ func TestMarshal(t *testing.T) {
 			},
 			Expected: `{"-":true,"twice":-1,"fource":"something"}`,
 		},
-		// 26
 		{
 			Value: struct {
 				Once  bool    `json:"-,omitempty"`
@@ -180,7 +167,6 @@ func TestMarshal(t *testing.T) {
 
 
 
-		// 27
 		{
 			Value: struct {
 				One DemoType
@@ -195,7 +181,6 @@ func TestMarshal(t *testing.T) {
 				`"Two":{"message":"TWO","note":"bing bong bang"}`+
 			`}`,
 		},
-		// 28
 		{
 			Value: struct {
 				One DemoType
@@ -207,7 +192,6 @@ func TestMarshal(t *testing.T) {
 				`"One":{"message":"ONE","note":"bing bong bang"}`+
 			`}`,
 		},
-		// 29
 		{
 			Value: struct {
 				One DemoType
@@ -222,7 +206,6 @@ func TestMarshal(t *testing.T) {
 
 
 
-		// 30
 		{
 			Value: struct {
 				First  int `json:"first,string"`
@@ -469,140 +452,6 @@ func TestMarshal(t *testing.T) {
 			Expected: `[{"apple":"ONE","banana":"TWO","cherry":"THREE"},{"apple":"1","banana":"2"},{"apple":"one"},{}]`,
 		},
 */
-
-
-
-
-
-
-
-
-		{
-			Value: map[string]string{},
-
-			Expected: `{}`,
-		},
-		{
-			Value: map[string]string{
-				"ONCE":"1",
-			},
-
-			Expected: `{"ONCE":"1"}`,
-		},
-		{
-			Value: map[string]string{
-				"ONCE":"1",
-				"TWICE":"2",
-			},
-
-			Expected: `{"ONCE":"1","TWICE":"2"}`,
-		},
-		{
-			Value: map[string]string{
-				"ONCE":"1",
-				"TWICE":"2",
-				"THRICE":"3",
-			},
-
-			Expected: `{"ONCE":"1","THRICE":"3","TWICE":"2"}`,
-		},
-		{
-			Value: map[string]string{
-				"ONCE":"1",
-				"TWICE":"2",
-				"THRICE":"3",
-				"FOURCE":"4",
-			},
-
-			Expected: `{"FOURCE":"4","ONCE":"1","THRICE":"3","TWICE":"2"}`,
-		},
-
-
-
-		{
-			Value: map[string]any{},
-
-			Expected: `{}`,
-		},
-		{
-			Value: map[string]any{
-				"ONCE":"1",
-			},
-
-			Expected: `{"ONCE":"1"}`,
-		},
-		{
-			Value: map[string]any{
-				"ONCE":"1",
-				"TWICE":"2",
-			},
-
-			Expected: `{"ONCE":"1","TWICE":"2"}`,
-		},
-		{
-			Value: map[string]any{
-				"ONCE":"1",
-				"TWICE":"2",
-				"THRICE":"3",
-			},
-
-			Expected: `{"ONCE":"1","THRICE":"3","TWICE":"2"}`,
-		},
-		{
-			Value: map[string]any{
-				"ONCE":"1",
-				"TWICE":"2",
-				"THRICE":"3",
-				"FOURCE":"4",
-			},
-
-			Expected: `{"FOURCE":"4","ONCE":"1","THRICE":"3","TWICE":"2"}`,
-		},
-
-
-
-		{
-			Value: map[any]any{},
-
-			Expected: `{}`,
-		},
-		{
-			Value: map[any]any{
-				"ONCE":"1",
-			},
-
-			Expected: `{"ONCE":"1"}`,
-		},
-		{
-			Value: map[any]any{
-				"ONCE":"1",
-				"TWICE":"2",
-			},
-
-			Expected: `{"ONCE":"1","TWICE":"2"}`,
-		},
-		{
-			Value: map[any]any{
-				"ONCE":"1",
-				"TWICE":"2",
-				"THRICE":"3",
-			},
-
-			Expected: `{"ONCE":"1","THRICE":"3","TWICE":"2"}`,
-		},
-		{
-			Value: map[any]any{
-				"ONCE":"1",
-				"TWICE":"2",
-				"THRICE":"3",
-				"FOURCE":"4",
-			},
-
-			Expected: `{"FOURCE":"4","ONCE":"1","THRICE":"3","TWICE":"2"}`,
-		},
-
-
-
 
 
 
