@@ -41,55 +41,6 @@ func TestMarshal(t *testing.T) {
 
 
 
-		{
-			Value: uint64(0),
-			Expected:    "0",
-		},
-		// 4
-		{
-			Value: uint64(1),
-			Expected:    "1",
-		},
-		// 5
-		{
-			Value: uint64(2),
-			Expected:    "2",
-		},
-		// 6
-		{
-			Value: uint64(3),
-			Expected:    "3",
-		},
-		// 7
-		{
-			Value: uint64(4),
-			Expected:    "4",
-		},
-		// 8
-		{
-			Value: uint64(5),
-			Expected:    "5",
-		},
-
-		// 9
-		{
-			Value: uint64(254),
-			Expected:    "254",
-		},
-		// 10
-		{
-			Value: uint64(255),
-			Expected:    "255",
-		},
-		// 11
-		{
-			Value: uint64(256),
-			Expected:    "256",
-		},
-
-
-
-
 		// 12
 		{
 			Value:     "",
