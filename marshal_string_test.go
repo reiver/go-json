@@ -36,8 +36,6 @@ func TestMarshal_string(t *testing.T) {
 			Expected: `"fource"`,
 		},
 
-
-
 		{
 			Value:     "درود",
 			Expected: `"درود"`,
@@ -47,14 +45,10 @@ func TestMarshal_string(t *testing.T) {
 			Expected: `"dorood"`,
 		},
 
-
-
 		{
 			Value:     "Hello world!",
 			Expected: `"Hello world!"`,
 		},
-
-
 
 		{
 			Value:     "🎂🎁🎈🎉🥳",
