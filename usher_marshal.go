@@ -16,13 +16,7 @@ func (receiver *Usher) Marshal(value any) ([]byte, error) {
 	case Marshaler:
 		return casted.MarshalJSON()
 	case encoding.TextMarshaler:
-		bytes, err := casted.MarshalText()
-		if nil != err {
-			return nil, err
-		}
-
-		var str string = string(bytes)
-		return gojson.Marshal(str)
+		return MarshalTextMarshaler(casted)
 	case string:
 		return MarshalString(casted), nil
 	case bool:
