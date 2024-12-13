@@ -26,7 +26,7 @@ package json
 //	
 //	bytes, err := json.Marshal(value)
 //
-// An alternative to Emptier is [Nothinger], which is more commonly usef with optional-types (i.e., optiona-types).
+// An alternative to Emptier is [Nothinger], which is more commonly used with optional-types (i.e., optiona-types).
 type Emptier interface {
 	IsEmpty() bool
 }
