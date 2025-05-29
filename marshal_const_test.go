@@ -8,7 +8,7 @@ import (
 	"github.com/reiver/go-json"
 )
 
-func TestMarshal_struct(t *testing.T) {
+func TestMarshal_const(t *testing.T) {
 
 	tests := []struct{
 		Value any
