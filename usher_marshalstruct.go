@@ -105,7 +105,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 				}
 
 				switch reflectedStructFieldValue.Kind() {
-				case reflect.Slice,reflect.Array:
+				case reflect.Slice,reflect.Map,reflect.Array:
 					if reflectedStructFieldValue.Len() <= 0 {
 		/////////////////////////////// CONTINUE
 						continue
