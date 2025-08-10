@@ -28,7 +28,7 @@ jsonBytes, err := json.Marshal(value)
 
 To install package **json** do the following:
 ```
-GOPROXY=direct go get https://github.com/reiver/go-json
+GOPROXY=direct go get github.com/reiver/go-json
 ```
 
 ## Author
