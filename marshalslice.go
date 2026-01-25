@@ -3,7 +3,7 @@ package json
 import (
 	"reflect"
 
-	"github.com/reiver/go-erorr"
+	"codeberg.org/reiver/go-erorr"
 )
 
 // MarshalString returns the JSON version of a Go string.

@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/reiver/go-erorr"
+	"codeberg.org/reiver/go-erorr"
 )
 
 func (receiver *Usher) marshalMap(value any) ([]byte, error) {

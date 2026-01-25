@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"unsafe"
 
-	"github.com/reiver/go-erorr"
+	"codeberg.org/reiver/go-erorr"
 )
 
 type Constantizer interface {

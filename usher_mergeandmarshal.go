@@ -1,7 +1,7 @@
 package json
 
 import (
-	"github.com/reiver/go-erorr"
+	"codeberg.org/reiver/go-erorr"
 )
 
 func (receiver *Usher) MergeAndMarshal(values ...any) ([]byte, error) {

@@ -3,7 +3,7 @@ package json
 import (
 	"reflect"
 
-	"github.com/reiver/go-erorr"
+	"codeberg.org/reiver/go-erorr"
 )
 
 func (receiver *Usher) marshalStruct(value any) ([]byte, error) {

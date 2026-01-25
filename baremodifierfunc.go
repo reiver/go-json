@@ -1,7 +1,7 @@
 package json
 
 import (
-	"github.com/reiver/go-erorr"
+	"codeberg.org/reiver/go-erorr"
 )
 
 // BareModifierFunc is the modifier that, in the DefaultUsher, is the implementation behind the "bare" modifier.
