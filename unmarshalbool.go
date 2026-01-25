@@ -11,8 +11,7 @@ var (
 
 // UnmarshalBool JSON-unmarshals a JSON bool into a Go bool.
 func UnmarshalBool(bytes []byte, dst *bool) error {
-	const spacing string = " \t\n\r"
-	bytes = gobytes.Trim(bytes, spacing)
+	bytes = trim(bytes)
 
 	var value bool
 	switch {
