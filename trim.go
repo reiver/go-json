@@ -4,7 +4,7 @@ import (
 	gobytes "bytes"
 )
 
-func trim(bytes []bytes) []byte {
+func trim(bytes []byte) []byte {
 	const spacing string = " \t\n\r"
 	return gobytes.Trim(bytes, spacing)
 }
