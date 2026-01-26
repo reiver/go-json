@@ -1,7 +1,7 @@
 package json
 
 import (
-	bytes "bytes"
+	gobytes "bytes"
 )
 
 func trim(bytes []bytes) []byte {
