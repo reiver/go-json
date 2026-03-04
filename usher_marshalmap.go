@@ -103,7 +103,7 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 			{
 				encoded, err := receiver.Marshal(mapValueAny)
 				if nil != err {
-					return nil, erorr.Errorf("json: cannot json-marshal a map-value of type %T", mapValueAny)
+					return nil, erorr.Errorf("json: cannot json-marshal a map-value of type %T: %w", mapValueAny, err)
 				}
 				p = append(p, encoded...)
 			}
