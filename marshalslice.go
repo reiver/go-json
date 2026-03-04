@@ -6,7 +6,7 @@ import (
 	"codeberg.org/reiver/go-erorr"
 )
 
-// MarshalString returns the JSON version of a Go string.
+// MarshalSlice returns the JSON version of a Go slice.
 func MarshalSlice[T any](value []T) ([]byte, error) {
 	return marshalSlice(value, Marshal)
 }
