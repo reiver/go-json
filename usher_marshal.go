@@ -116,6 +116,10 @@ func (receiver *Usher) Marshal(value any) ([]byte, error) {
 		return MarshalUint32(casted), nil
 	case uint64:
 		return MarshalUint64(casted), nil
+	case float32:
+		return MarshalFloat32(casted), nil
+	case float64:
+		return MarshalFloat64(casted), nil
 
 	default:
 		reflectedType := reflect.TypeOf(value)

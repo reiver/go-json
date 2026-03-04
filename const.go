@@ -73,6 +73,8 @@ var _ Constantizer = Const[uint8]{}
 var _ Constantizer = Const[uint16]{}
 var _ Constantizer = Const[uint32]{}
 var _ Constantizer = Const[uint64]{}
+var _ Constantizer = Const[float32]{}
+var _ Constantizer = Const[float64]{}
 
 // See the [Constantizer] interface documentation for details on why this exists.
 func (Const[T]) JSONConst() {
@@ -109,6 +111,10 @@ func (Const[T]) DecodeFromString(str string) (any, error) {
 		return decodeUint32FromString(str)
 	case uint64:
 		return decodeUint64FromString(str)
+	case float32:
+		return decodeFloat32FromString(str)
+	case float64:
+		return decodeFloat64FromString(str)
 	default:
 		return nil, erorr.Errorf("json: cannot decode %T from string %q", a, str)
 	}
@@ -267,5 +273,33 @@ func decodeUint64FromString(str string) (any, error) {
 	}
 
 	result = u64
+	return result, nil
+}
+
+func decodeFloat32FromString(str string) (any, error) {
+	var nada    float32
+	const bitSize = 32
+	var result  float32
+
+	f64, err := strconv.ParseFloat(str, bitSize)
+	if nil != err {
+		return nada, erorr.Errorf("json: problem decoding %T from string %q: %w", nada, str, err)
+	}
+
+	result = float32(f64)
+	return result, nil
+}
+
+func decodeFloat64FromString(str string) (any, error) {
+	var nada    float64
+	const bitSize = 64
+	var result  float64
+
+	f64, err := strconv.ParseFloat(str, bitSize)
+	if nil != err {
+		return nada, erorr.Errorf("json: problem decoding %T from string %q: %w", nada, str, err)
+	}
+
+	result = f64
 	return result, nil
 }
