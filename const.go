@@ -110,7 +110,7 @@ func (Const[T]) DecodeFromString(str string) (any, error) {
 	case uint64:
 		return decodeUint64FromString(str)
 	default:
-		return nil, erorr.Errorf("json: cannot decode %t from string %q", a, str)
+		return nil, erorr.Errorf("json: cannot decode %T from string %q", a, str)
 	}
 }
 
