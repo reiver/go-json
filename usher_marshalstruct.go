@@ -64,6 +64,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 			var name string
 			var skip bool
 			var omitempty bool
+			var nullempty bool
 			var modifiers []string
 			{
 				name = reflectedStructFieldType.Name
@@ -73,7 +74,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 				if found {
 					var newname string
 
-					newname, skip, omitempty, modifiers = parseTag(tag)
+					newname, skip, omitempty, nullempty, modifiers = parseTag(tag)
 
 					if "" != newname {
 						name = newname
@@ -115,13 +116,52 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 
 			{
 				var valuebytes []byte
-				{
+				var nulled bool
+				if nullempty {
+					var empty bool
+					var checkedInterface bool
+
+					switch casted := structFieldValueAny.(type) {
+					case Emptier:
+						empty = casted.IsEmpty()
+						checkedInterface = true
+					case Nothinger:
+						empty = casted.IsNothing()
+						checkedInterface = true
+					}
+
+					if !checkedInterface {
+						var zero reflect.Value = reflect.Zero(reflectedStructFieldType.Type)
+						if reflect.DeepEqual(zero.Interface(), structFieldValueAny) {
+							empty = true
+						}
+					}
+
+					if !checkedInterface && !empty {
+						switch reflectedStructFieldValue.Kind() {
+						case reflect.Slice,reflect.Map,reflect.Array:
+							if reflectedStructFieldValue.Len() <= 0 {
+								empty = true
+							}
+						}
+					}
+
+					if empty {
+						valuebytes = []byte("null")
+						nulled = true
+					}
+				}
+				if !nulled {
 					var err error
 					valuebytes, err = receiver.Marshal(structFieldValueAny)
 					if nil != err {
 						if _, isErrorEmpty := err.(ErrorEmpty) ; omitempty && isErrorEmpty {
 		/////////////////////////////////////// CONTINUE
 							continue
+						}
+						if _, isErrorEmpty := err.(ErrorEmpty) ; nullempty && isErrorEmpty {
+							valuebytes = []byte("null")
+							goto doneModifiers
 						}
 						return nil, erorr.Errorf("json: problem marshaling %T into JSON: %w", structFieldValueAny, err)
 					}
@@ -151,6 +191,11 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 									omitted = true
 									break
 								}
+								if _, isErrorEmpty := err.(ErrorEmpty) ; nullempty && isErrorEmpty {
+									valuebytes = []byte("null")
+									omitted = false
+									break
+								}
 								return nil, erorr.Errorf("json: problem marshaling %T into JSON using modifier %q: %w", structFieldValueAny, modifierName, err)
 							}
 						}
@@ -161,6 +206,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 					}
 
 				}
+				doneModifiers:
 
 				var namebytes []byte = MarshalString(name)
 

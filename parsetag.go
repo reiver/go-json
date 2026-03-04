@@ -18,7 +18,7 @@ import (
 //		// ...
 //
 //	}
-func parseTag(tag string) (name string, skip bool, omitempty bool, modifiers []string) {
+func parseTag(tag string) (name string, skip bool, omitempty bool, nullempty bool, modifiers []string) {
 	 parts := strings.Split(tag, ",")
 	if len(parts) <= 0 {
 		return
@@ -35,6 +35,8 @@ func parseTag(tag string) (name string, skip bool, omitempty bool, modifiers []s
 		switch part {
 		case "omitempty":
 			omitempty = true
+		case "nullempty":
+			nullempty = true
 		case "":
 			// nothing here
 		default:

@@ -188,7 +188,7 @@ func TestParseTag(t *testing.T) {
 
 	for testNumber, test := range tests {
 
-		actualName, actualSkip, actualOmitEmpty, actualModifiers := parseTag(test.Tag)
+		actualName, actualSkip, actualOmitEmpty, _, actualModifiers := parseTag(test.Tag)
 
 		{
 			actual := actualName
