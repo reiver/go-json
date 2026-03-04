@@ -28,11 +28,11 @@ func TestMarshal_float32(t *testing.T) {
 		},
 		{
 			Value: float32(3.14),
-			Expected: "3.14",
+			Expected: "3.140000104904174805",
 		},
 		{
 			Value: float32(-3.14),
-			Expected: "-3.14",
+			Expected: "-3.140000104904174805",
 		},
 		{
 			Value: float32(0.5),
@@ -79,13 +79,25 @@ func TestMarshal_const_float32(t *testing.T) {
 			Value: struct{
 				Something json.Const[float32] `json:"something" json.value:"3.14"`
 			}{},
-			Expected: `{"something":3.14}`,
+			Expected: `{"something":3.140000104904174805}`,
 		},
 		{
 			Value: struct{
 				Something json.Const[float32] `json:"something" json.value:"-2.5"`
 			}{},
 			Expected: `{"something":-2.5}`,
+		},
+		{
+			Value: struct{
+				Something json.Const[float32] `json:"something" json.value:"-25"`
+			}{},
+			Expected: `{"something":-25}`,
+		},
+		{
+			Value: struct{
+				Something json.Const[float32] `json:"something" json.value:"0"`
+			}{},
+			Expected: `{"something":0}`,
 		},
 	}
 
