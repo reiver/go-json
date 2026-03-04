@@ -37,7 +37,7 @@ A modifier transforms the already-marshaled JSON bytes of a struct field.
 Field Type `json:"name,modifier1,modifier2,..."`
 ```
 
-Any struct tag option that isn't `omitempty` or `-` is treated as a modifier name.
+Any struct tag option that isn't `omitempty`, `nullempty`, or `-` is treated as a modifier name.
 Multiple modifiers are applied in order, left to right.
 
 ### Built-in Modifiers
@@ -91,12 +91,37 @@ Field string `json:"field,omitempty,string,mymod"`
 
 This applies `string` first, then `mymod`.
 If any modifier returns an `ErrorEmpty` error and the field has `omitempty`, the field is omitted from the output.
+If the field has `nullempty` instead, the field outputs `null`.
 
 To add a custom modifier to the global `DefaultUsher` (so it works with `json.Marshal`):
 
 ```golang
 json.DefaultUsher.ImplantModifier("mymod", myModifierFunc)
 ```
+
+## Null Empty (`nullempty`)
+
+The `nullempty` struct tag option outputs JSON `null` for a field when its value is empty, instead of omitting the field entirely (which is what `omitempty` does).
+
+```golang
+type MyStruct struct {
+	Name  string   `json:"name"`
+	Value string   `json:"value,nullempty"`
+	Items []string `json:"items,nullempty"`
+}
+
+// With zero values produces: {"name":"","value":null,"items":null}
+```
+
+Emptiness is determined using the same checks as `omitempty`:
+- Types implementing `Emptier` (`IsEmpty() bool`)
+- Types implementing `Nothinger` (`IsNothing() bool`)
+- Zero values (via `reflect.DeepEqual`)
+- Empty slices, maps, and arrays (length 0)
+
+When a type implements `Emptier` or `Nothinger`, that interface is trusted and the fallback zero-value/length checks are not applied.
+
+If a `MarshalJSON()` method or a modifier returns an `ErrorEmpty` error and the field has `nullempty`, the field outputs `null` instead of being omitted.
 
 ## Installation
 
