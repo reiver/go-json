@@ -1,10 +1,12 @@
 # go-json
 
-Package **json** implements JSON encoders and decoders, for the Go programming language.
+Package **json** implements JSON encoders and decoders, for the Go programming-language (golang).
 
 Package **json** is meant to be a replacement for the Go built-in `"encoding/json"` package.
 
 Package **json** also includes a number of addtional useful features (that the Go built-in `"encoding/json"` package does _not_ have).
+
+Package **json** is a custom JSON encoding/decoding library for the Go programming-language (golang), designed as a replacement for the Go built-in`"encoding/json"` package with additional features like _custom modifiers_, _constant fields_, and _extended struct tag support_.
 
 ## Documention
 
