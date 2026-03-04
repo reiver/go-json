@@ -44,7 +44,9 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 			sort.Slice(reflectedKeys, fn)
 		}
 
-		for i, reflectedKey := range reflectedKeys {
+		var notempty bool
+
+		for _, reflectedKey := range reflectedKeys {
 
 			mapValueAny := reflectedValue.MapIndex(reflectedKey).Interface()
 
@@ -53,7 +55,7 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 				continue
 			}
 
-			if 0 < i {
+			if notempty {
 				p = append(p, ',')
 			}
 
@@ -107,6 +109,7 @@ func (receiver *Usher) marshalMap(value any) ([]byte, error) {
 				}
 				p = append(p, encoded...)
 			}
+			notempty = true
 		}
 	}
 

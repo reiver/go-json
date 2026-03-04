@@ -8,6 +8,10 @@ import (
 	"github.com/reiver/go-json"
 )
 
+type testOmitAlways struct{}
+
+func (testOmitAlways) JSONOmitAlways() {}
+
 func TestUsher_marshalMap(t *testing.T) {
 
 	tests := []struct{
@@ -91,6 +95,43 @@ func TestUsher_marshalMap(t *testing.T) {
 				"fource":"four",
 			},
 			Expected: []byte(`{"fource":"four","once":"one","thrice":"three","twice":"two"}`),
+		},
+
+
+
+
+		// OmitAlways value is first alphabetically — tests that comma logic
+		// doesn't produce a leading comma like {,"key":"val"}.
+		{
+			Map: map[string]any{
+				"aaa": testOmitAlways{},
+				"bbb": "hello",
+			},
+			Expected: []byte(`{"bbb":"hello"}`),
+		},
+		{
+			Map: map[string]any{
+				"aaa": testOmitAlways{},
+				"bbb": "hello",
+				"ccc": 42,
+			},
+			Expected: []byte(`{"bbb":"hello","ccc":42}`),
+		},
+		// OmitAlways value is in the middle.
+		{
+			Map: map[string]any{
+				"aaa": "hello",
+				"bbb": testOmitAlways{},
+				"ccc": 42,
+			},
+			Expected: []byte(`{"aaa":"hello","ccc":42}`),
+		},
+		// All values are OmitAlways.
+		{
+			Map: map[string]any{
+				"aaa": testOmitAlways{},
+			},
+			Expected: []byte(`{}`),
 		},
 	}
 
