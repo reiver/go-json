@@ -26,6 +26,16 @@ import "github.com/reiver/go-json"
 jsonBytes, err := json.Marshal(value)
 ```
 
+To unmarshal a JSON value to Go, you can do something similar to the following:
+
+```golang
+import "github.com/reiver/go-json"
+
+// ...
+
+err := json.Unarshal(jsonBytes, &value)
+```
+
 ## Custom Modifiers
 
 Package **json** supports _custom modifiers_ through struct tags.
