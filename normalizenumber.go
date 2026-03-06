@@ -1,9 +1,28 @@
 package json
 
+import (
+	"unsafe"
+)
+
+// NormalizeNumberBytes normalizes a JSON number.
+// It expands scientific notation into plain decimal form (e.g., "3.7e-5" becomes "0.000037"),
+// strips leading '+', unnecessary leading zeros, trailing zeros after a decimal point, and a trailing decimal point.
+// A negative sign is preserved when appropriate.
+//
+// NormalizeNumberBytes is similar to [NormalizeNumberString] except it accepts a []byte (rather than a string).
+//
+// See also: [Number].
+func NormalizeNumberBytes(bytes []byte) string {
+	var str string = unsafe.String(unsafe.SliceData(bytes), len(bytes))
+	return NormalizeNumberString(str)
+}
+
 // NormalizeNumberString normalizes a JSON number.
 // It expands scientific notation into plain decimal form (e.g., "3.7e-5" becomes "0.000037"),
 // strips leading '+', unnecessary leading zeros, trailing zeros after a decimal point, and a trailing decimal point.
 // A negative sign is preserved when appropriate.
+//
+// NormalizeNumberString is similar to [NormalizeNumberBytes] except it accepts a string (rather than a []byte).
 //
 // See also: [Number].
 func NormalizeNumberString(str string) string {
