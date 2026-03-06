@@ -1,6 +1,8 @@
 package json
 
 import (
+	"strconv"
+
 	"codeberg.org/reiver/go-erorr"
 )
 
@@ -141,10 +143,46 @@ func (receiver Number) MarshalJSON() ([]byte, error) {
 	return []byte(receiver.get()), nil
 }
 
+// Int64 returns the number as an int64.
+// The second return value is false if the number cannot be represented as an int64.
+func (receiver Number) Int64() (int64, bool) {
+	n, err := strconv.ParseInt(receiver.get(), 10, 64)
+	if nil != err {
+		return 0, false
+	}
+	return n, true
+}
+
+// Uint64 returns the number as a uint64.
+// The second return value is false if the number cannot be represented as a uint64.
+func (receiver Number) Uint64() (uint64, bool) {
+	n, err := strconv.ParseUint(receiver.get(), 10, 64)
+	if nil != err {
+		return 0, false
+	}
+	return n, true
+}
+
+// Float64 returns the number as a float64.
+// The second return value is false if the number cannot be represented as a float64.
+func (receiver Number) Float64() (float64, bool) {
+	f, err := strconv.ParseFloat(receiver.get(), 64)
+	if nil != err {
+		return 0, false
+	}
+	return f, true
+}
+
 // UnmarshalJSON sets the number from a JSON number literal.
+// Returns an error if data is not a valid JSON number.
 //
-// String makes [Number] fit the [Unmarshaler] interface.
+// UnmarshalJSON makes [Number] fit the [Unmarshaler] interface.
 func (receiver *Number) UnmarshalJSON(data []byte) error {
-	receiver.set(string(data))
+	var str string = string(data)
+
+	if !isJSONNumber(str) {
+		return erorr.Errorf("json: cannot unmarshal %q into Number: %w", str, ErrNotJSONNumber)
+	}
+	receiver.set(str)
 	return nil
 }
