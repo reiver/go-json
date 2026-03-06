@@ -184,6 +184,205 @@ func TestUnobstructedUnmarshal_plusSign(t *testing.T) {
 	}
 }
 
+func TestUnobstructedUnmarshal_leadingZeros(t *testing.T) {
+
+	tests := []struct{
+		Bytes    []byte
+		Dst      func() any
+		Expected any
+	}{
+		{
+			Bytes: []byte(`07`),
+			Dst: func() any {
+				return new(int)
+			},
+			Expected: 7,
+		},
+
+
+
+		{
+			Bytes: []byte(`007`),
+			Dst: func() any {
+				return new(int)
+			},
+			Expected: 7,
+		},
+
+
+
+		{
+			Bytes: []byte(`0007`),
+			Dst: func() any {
+				return new(int)
+			},
+			Expected: 7,
+		},
+
+
+
+		{
+			Bytes: []byte(`0100`),
+			Dst: func() any {
+				return new(int)
+			},
+			Expected: 100,
+		},
+
+
+
+		{
+			Bytes: []byte(`00100`),
+			Dst: func() any {
+				return new(int)
+			},
+			Expected: 100,
+		},
+
+
+
+		{
+			// Leading zeros in struct field.
+			Bytes: []byte(`{"value":0100}`),
+			Dst: func() any {
+				return &struct {
+					Value int `json:"value"`
+				}{}
+			},
+			Expected: struct {
+				Value int `json:"value"`
+			}{
+				Value: 100,
+			},
+		},
+
+
+
+		{
+			// Leading zeros into any.
+			Bytes: []byte(`007`),
+			Dst: func() any {
+				var v any
+				return &v
+			},
+			Expected: json.MustParseNumberString("7"),
+		},
+	}
+
+	for testNumber, test := range tests {
+		dst := test.Dst()
+
+		err := json.UnobstructedUnmarshal(test.Bytes, dst)
+		if nil != err {
+			t.Errorf("For test #%d, did not expect an error but actually got one.", testNumber)
+			t.Logf("ERROR: %s", err)
+			t.Logf("BYTES:\n%s", test.Bytes)
+			continue
+		}
+
+		actual := reflect.ValueOf(dst).Elem().Interface()
+
+		if !reflect.DeepEqual(test.Expected, actual) {
+			t.Errorf("For test #%d, the actual unmarshaled value is not what was expected.", testNumber)
+			t.Logf("EXPECTED:\n%#v", test.Expected)
+			t.Logf("ACTUAL:\n%#v", actual)
+			t.Logf("BYTES:\n%s", test.Bytes)
+			continue
+		}
+	}
+}
+
+func TestUnobstructedUnmarshal_trailingDot(t *testing.T) {
+
+	tests := []struct{
+		Bytes    []byte
+		Dst      func() any
+		Expected any
+	}{
+		{
+			// Trailing dot into int.
+			Bytes: []byte(`100.`),
+			Dst: func() any {
+				return new(int)
+			},
+			Expected: 100,
+		},
+
+
+
+		{
+			// Trailing dot into float64.
+			Bytes: []byte(`100.`),
+			Dst: func() any {
+				return new(float64)
+			},
+			Expected: float64(100),
+		},
+
+
+
+		{
+			// Normal decimal into int (already works, for completeness).
+			Bytes: []byte(`100.0`),
+			Dst: func() any {
+				return new(int)
+			},
+			Expected: 100,
+		},
+
+
+
+		{
+			// Trailing dot in struct field.
+			Bytes: []byte(`{"value":100.}`),
+			Dst: func() any {
+				return &struct {
+					Value int `json:"value"`
+				}{}
+			},
+			Expected: struct {
+				Value int `json:"value"`
+			}{
+				Value: 100,
+			},
+		},
+
+
+
+		{
+			// Trailing dot into any.
+			Bytes: []byte(`100.`),
+			Dst: func() any {
+				var v any
+				return &v
+			},
+			Expected: json.MustParseNumberString("100"),
+		},
+	}
+
+	for testNumber, test := range tests {
+		dst := test.Dst()
+
+		err := json.UnobstructedUnmarshal(test.Bytes, dst)
+		if nil != err {
+			t.Errorf("For test #%d, did not expect an error but actually got one.", testNumber)
+			t.Logf("ERROR: %s", err)
+			t.Logf("BYTES:\n%s", test.Bytes)
+			continue
+		}
+
+		actual := reflect.ValueOf(dst).Elem().Interface()
+
+		if !reflect.DeepEqual(test.Expected, actual) {
+			t.Errorf("For test #%d, the actual unmarshaled value is not what was expected.", testNumber)
+			t.Logf("EXPECTED:\n%#v", test.Expected)
+			t.Logf("ACTUAL:\n%#v", actual)
+			t.Logf("BYTES:\n%s", test.Bytes)
+			continue
+		}
+	}
+}
+
 func TestUnobstructedUnmarshal_comments(t *testing.T) {
 
 	tests := []struct{

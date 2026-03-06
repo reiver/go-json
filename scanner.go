@@ -174,6 +174,11 @@ func (s *scanner) scanNumber() (token, error) {
 	// Integer part.
 	if s.pos < s.length && s.data[s.pos] == '0' {
 		s.pos++
+		if s.permissive {
+			for s.pos < s.length && '0' <= s.data[s.pos] && s.data[s.pos] <= '9' {
+				s.pos++
+			}
+		}
 	} else if s.pos < s.length && '1' <= s.data[s.pos] && s.data[s.pos] <= '9' {
 		s.pos++
 		for s.pos < s.length && '0' <= s.data[s.pos] && s.data[s.pos] <= '9' {
@@ -187,10 +192,13 @@ func (s *scanner) scanNumber() (token, error) {
 	if s.pos < s.length && s.data[s.pos] == '.' {
 		s.pos++
 		if s.pos >= s.length || s.data[s.pos] < '0' || s.data[s.pos] > '9' {
-			return token{}, erorr.Errorf("json: invalid number at position %d — expected digit after decimal point", start)
-		}
-		for s.pos < s.length && '0' <= s.data[s.pos] && s.data[s.pos] <= '9' {
-			s.pos++
+			if !s.permissive {
+				return token{}, erorr.Errorf("json: invalid number at position %d — expected digit after decimal point", start)
+			}
+		} else {
+			for s.pos < s.length && '0' <= s.data[s.pos] && s.data[s.pos] <= '9' {
+				s.pos++
+			}
 		}
 	}
 
