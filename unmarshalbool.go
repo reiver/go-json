@@ -2,6 +2,8 @@ package json
 
 import (
 	gobytes "bytes"
+
+	"codeberg.org/reiver/go-erorr"
 )
 
 var (
@@ -20,9 +22,22 @@ func UnmarshalBool(bytes []byte, dst *bool) error {
 	case gobytes.Equal(bytes, trueBytes):
 		value = true
 	default:
-		return ErrNotBool
+		var err error = ErrNotBool
+		return erorr.Errorf("json: cannot parse %q as a JSON bool: %w", bytes, err)
 	}
 
 	*dst = value
+	return nil
+}
+
+// UnobstructedUnmarshal JSON-unmarshals a JSON bool into a Go bool.
+// It ignore the letter-casing of "true" and "false".
+func UnobstructedUnmarshalBool(bytes []byte, dst *bool) error {
+	var lower []byte = gobytes.ToLower(bytes)
+	err := UnmarshalBool(lower, dst)
+	if nil != err {
+		return erorr.Errorf("json: cannot parse %q as a 'unobstructed' JSON bool: %w", bytes, err)
+	}
+
 	return nil
 }
