@@ -1,12 +1,12 @@
 package json
 
-// NormalizeNumber normalizes a JSON number.
+// NormalizeNumberString normalizes a JSON number.
 // It expands scientific notation into plain decimal form (e.g., "3.7e-5" becomes "0.000037"),
 // strips leading '+', unnecessary leading zeros, trailing zeros after a decimal point, and a trailing decimal point.
 // A negative sign is preserved when appropriate.
 //
 // See also: [Number].
-func NormalizeNumber(str string) string {
+func NormalizeNumberString(str string) string {
 	if len(str) == 0 {
 		return "0"
 	}

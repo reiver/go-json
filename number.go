@@ -9,7 +9,7 @@ import (
 // Number represents a JSON number.
 // It stores it as a string to avoid precision loss that comes from using float64.
 //
-// See also: [NormalizeNumber].
+// See also: [NormalizeNumberString].
 type Number struct {
 	value string
 }
@@ -123,7 +123,7 @@ func (receiver Number) get() string {
 // set normalizes and stores the given numeric string.
 // If the normalized value is "0", it stores "" to make it so an uninitialized [Number] has the same value as one set to zero.
 func (receiver *Number) set(value string) {
-	normalized := NormalizeNumber(value)
+	normalized := NormalizeNumberString(value)
 	if "0" == normalized {
 		receiver.value = ""
 		return

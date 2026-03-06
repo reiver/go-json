@@ -203,7 +203,7 @@ func unmarshalNumber(tok token, dst reflect.Value, path *jsonPath) error {
 
 	switch dst.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		normalized := NormalizeNumber(numStr)
+		normalized := NormalizeNumberString(numStr)
 		n, err := strconv.ParseInt(normalized, 10, dst.Type().Bits())
 		if nil != err {
 			return erorr.Errorf("json: cannot unmarshal %q into %s at %s: %w", numStr, dst.Type(), path.String(), err)
@@ -212,7 +212,7 @@ func unmarshalNumber(tok token, dst reflect.Value, path *jsonPath) error {
 		return nil
 
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		normalized := NormalizeNumber(numStr)
+		normalized := NormalizeNumberString(numStr)
 		n, err := strconv.ParseUint(normalized, 10, dst.Type().Bits())
 		if nil != err {
 			return erorr.Errorf("json: cannot unmarshal %q into %s at %s: %w", numStr, dst.Type(), path.String(), err)

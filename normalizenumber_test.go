@@ -6,7 +6,7 @@ import (
 	"github.com/reiver/go-json"
 )
 
-func TestNormalizeNumber(t *testing.T) {
+func TestNormalizeNumberString(t *testing.T) {
 
 	tests := []struct{
 		Value    string
@@ -182,7 +182,7 @@ func TestNormalizeNumber(t *testing.T) {
 	}
 
 	for testNumber, test := range tests {
-		actual := json.NormalizeNumber(test.Value)
+		actual := json.NormalizeNumberString(test.Value)
 
 		if test.Expected != actual {
 			t.Errorf("For test #%d, the actual normalized value is not what was expected.", testNumber)
