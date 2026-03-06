@@ -33,7 +33,7 @@ import "github.com/reiver/go-json"
 
 // ...
 
-err := json.Unarshal(jsonBytes, &value)
+err := json.Unmarshal(jsonBytes, &value)
 ```
 
 ## Custom Modifiers
