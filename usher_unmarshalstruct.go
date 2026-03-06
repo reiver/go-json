@@ -308,24 +308,10 @@ type signedInt interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64
 }
 
-type unsignedInt interface {
-	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
-}
-
 func parseJSONInt[T signedInt](data []byte) (any, error) {
 	var zero T
 	bitSize := int(reflect.TypeOf(zero).Size()) * 8
 	n, err := strconv.ParseInt(string(data), 10, bitSize)
-	if nil != err {
-		return nil, err
-	}
-	return T(n), nil
-}
-
-func parseJSONUint[T unsignedInt](data []byte) (any, error) {
-	var zero T
-	bitSize := int(reflect.TypeOf(zero).Size()) * 8
-	n, err := strconv.ParseUint(string(data), 10, bitSize)
 	if nil != err {
 		return nil, err
 	}
