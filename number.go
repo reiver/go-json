@@ -8,6 +8,8 @@ import (
 
 // Number represents a JSON number.
 // It stores it as a string to avoid precision loss that comes from using float64.
+//
+// See also: [NormalizeNumber].
 type Number struct {
 	value string
 }
