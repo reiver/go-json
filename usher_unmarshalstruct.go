@@ -249,14 +249,11 @@ func parseJSONValueAs(raw []byte, exemplar any) (any, error) {
 
 	switch exemplar.(type) {
 	case bool:
-		switch string(trimmed) {
-		case "true":
-			return true, nil
-		case "false":
-			return false, nil
-		default:
-			return nil, erorr.Errorf("json: cannot parse %q as bool", string(trimmed))
+		var val bool
+		if err := UnmarshalBool(trimmed, &val); nil != err {
+			return nil, err
 		}
+		return val, nil
 
 	case string:
 		// Must be a JSON string.
