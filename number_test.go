@@ -127,11 +127,6 @@ func TestNumber_UnmarshalJSON(t *testing.T) {
 
 
 		{
-			JSON:           "100",
-			ExpectedString: "100",
-		},
-
-		{
 			JSON:          "0100",
 			ExpectedString: "100",
 		},
@@ -153,6 +148,10 @@ func TestNumber_UnmarshalJSON(t *testing.T) {
 			ExpectedString: "100",
 		},
 		{
+			JSON:           "100",
+			ExpectedString: "100",
+		},
+		{
 			JSON:           "100.0",
 			ExpectedString: "100",
 		},
@@ -168,14 +167,10 @@ func TestNumber_UnmarshalJSON(t *testing.T) {
 			JSON:           "100.0000",
 			ExpectedString: "100",
 		},
-
 		{
-			JSON:       "0000100.0000",
-			ExpectedString: "100",
+			JSON:           "3.140",
+			ExpectedString: "3.14",
 		},
-
-
-
 		{
 			JSON:                 "3.7e-5",
 			ExpectedString: "0.000037",
@@ -184,10 +179,6 @@ func TestNumber_UnmarshalJSON(t *testing.T) {
 			JSON:                 "3.7E-5",
 			ExpectedString: "0.000037",
 		},
-
-
-
-
 		{
 			JSON:           "2.8281e7",
 			ExpectedString: "28281000",
@@ -305,6 +296,175 @@ func TestNumber_roundtrip(t *testing.T) {
 			t.Errorf("For test #%d, the actual JSON is not what was expected.", testNumber)
 			t.Logf("EXPECTED: %s", test.Expected)
 			t.Logf("ACTUAL:   %s", string(actual))
+			continue
+		}
+	}
+}
+
+func TestNumber_Int64(t *testing.T) {
+
+	tests := []struct{
+		Number      json.Number
+		ExpectedInt int64
+		ExpectedOK  bool
+	}{
+		{
+			Number:      json.Number{},
+			ExpectedInt: 0,
+			ExpectedOK:  true,
+		},
+		{
+			Number:      json.MustParseNumberString("42"),
+			ExpectedInt: 42,
+			ExpectedOK:  true,
+		},
+		{
+			Number:      json.MustParseNumberString("-100"),
+			ExpectedInt: -100,
+			ExpectedOK:  true,
+		},
+		{
+			Number:      json.MustParseNumberString("9223372036854775807"),
+			ExpectedInt: 9223372036854775807,
+			ExpectedOK:  true,
+		},
+		{
+			Number:      json.MustParseNumberString("-9223372036854775808"),
+			ExpectedInt: -9223372036854775808,
+			ExpectedOK:  true,
+		},
+		{
+			Number:      json.MustParseNumberString("3.14"),
+			ExpectedInt: 0,
+			ExpectedOK:  false,
+		},
+		{
+			Number:      json.MustParseNumberString("18446744073709551615"),
+			ExpectedInt: 0,
+			ExpectedOK:  false,
+		},
+	}
+
+	for testNumber, test := range tests {
+		actual, ok := test.Number.Int64()
+
+		if test.ExpectedOK != ok {
+			t.Errorf("For test #%d, the actual ok is not what was expected.", testNumber)
+			t.Logf("EXPECTED OK: %v", test.ExpectedOK)
+			t.Logf("ACTUAL OK:   %v", ok)
+			continue
+		}
+
+		if test.ExpectedInt != actual {
+			t.Errorf("For test #%d, the actual int64 is not what was expected.", testNumber)
+			t.Logf("EXPECTED: %d", test.ExpectedInt)
+			t.Logf("ACTUAL:   %d", actual)
+			continue
+		}
+	}
+}
+
+func TestNumber_Uint64(t *testing.T) {
+
+	tests := []struct{
+		Number       json.Number
+		ExpectedUint uint64
+		ExpectedOK   bool
+	}{
+		{
+			Number:       json.Number{},
+			ExpectedUint: 0,
+			ExpectedOK:   true,
+		},
+		{
+			Number:       json.MustParseNumberString("42"),
+			ExpectedUint: 42,
+			ExpectedOK:   true,
+		},
+		{
+			Number:       json.MustParseNumberString("18446744073709551615"),
+			ExpectedUint: 18446744073709551615,
+			ExpectedOK:   true,
+		},
+		{
+			Number:       json.MustParseNumberString("-1"),
+			ExpectedUint: 0,
+			ExpectedOK:   false,
+		},
+		{
+			Number:       json.MustParseNumberString("3.14"),
+			ExpectedUint: 0,
+			ExpectedOK:   false,
+		},
+	}
+
+	for testNumber, test := range tests {
+		actual, ok := test.Number.Uint64()
+
+		if test.ExpectedOK != ok {
+			t.Errorf("For test #%d, the actual ok is not what was expected.", testNumber)
+			t.Logf("EXPECTED OK: %v", test.ExpectedOK)
+			t.Logf("ACTUAL OK:   %v", ok)
+			continue
+		}
+
+		if test.ExpectedUint != actual {
+			t.Errorf("For test #%d, the actual uint64 is not what was expected.", testNumber)
+			t.Logf("EXPECTED: %d", test.ExpectedUint)
+			t.Logf("ACTUAL:   %d", actual)
+			continue
+		}
+	}
+}
+
+func TestNumber_Float64(t *testing.T) {
+
+	tests := []struct{
+		Number        json.Number
+		ExpectedFloat float64
+		ExpectedOK    bool
+	}{
+		{
+			Number:        json.Number{},
+			ExpectedFloat: 0,
+			ExpectedOK:    true,
+		},
+		{
+			Number:        json.MustParseNumberString("42"),
+			ExpectedFloat: 42,
+			ExpectedOK:    true,
+		},
+		{
+			Number:        json.MustParseNumberString("3.14"),
+			ExpectedFloat: 3.14,
+			ExpectedOK:    true,
+		},
+		{
+			Number:        json.MustParseNumberString("-0.5"),
+			ExpectedFloat: -0.5,
+			ExpectedOK:    true,
+		},
+		{
+			Number:        json.MustParseNumberString("100"),
+			ExpectedFloat: 100,
+			ExpectedOK:    true,
+		},
+	}
+
+	for testNumber, test := range tests {
+		actual, ok := test.Number.Float64()
+
+		if test.ExpectedOK != ok {
+			t.Errorf("For test #%d, the actual ok is not what was expected.", testNumber)
+			t.Logf("EXPECTED OK: %v", test.ExpectedOK)
+			t.Logf("ACTUAL OK:   %v", ok)
+			continue
+		}
+
+		if test.ExpectedFloat != actual {
+			t.Errorf("For test #%d, the actual float64 is not what was expected.", testNumber)
+			t.Logf("EXPECTED: %v", test.ExpectedFloat)
+			t.Logf("ACTUAL:   %v", actual)
 			continue
 		}
 	}
