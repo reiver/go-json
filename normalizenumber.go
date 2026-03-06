@@ -9,12 +9,12 @@ import (
 // strips leading '+', unnecessary leading zeros, trailing zeros after a decimal point, and a trailing decimal point.
 // A negative sign is preserved when appropriate.
 //
-// NormalizeNumberBytes is similar to [NormalizeNumberString] except it accepts a []byte (rather than a string).
+// NormalizeNumberBytes is similar to [NormalizeNumberString] except it accepts and returns a []byte (rather than a string).
 //
 // See also: [Number].
-func NormalizeNumberBytes(bytes []byte) string {
+func NormalizeNumberBytes(bytes []byte) []byte {
 	var str string = unsafe.String(unsafe.SliceData(bytes), len(bytes))
-	return NormalizeNumberString(str)
+	return []byte(NormalizeNumberString(str))
 }
 
 // NormalizeNumberString normalizes a JSON number.
@@ -22,7 +22,7 @@ func NormalizeNumberBytes(bytes []byte) string {
 // strips leading '+', unnecessary leading zeros, trailing zeros after a decimal point, and a trailing decimal point.
 // A negative sign is preserved when appropriate.
 //
-// NormalizeNumberString is similar to [NormalizeNumberBytes] except it accepts a string (rather than a []byte).
+// NormalizeNumberString is similar to [NormalizeNumberBytes] except it accepts and returns a string (rather than a []byte).
 //
 // See also: [Number].
 func NormalizeNumberString(str string) string {
