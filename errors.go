@@ -6,13 +6,13 @@ import (
 
 const (
 	ErrModifierNotReversible = erorr.Error("json: modifier is not reversible")
+	ErrNilReceiver           = erorr.Error("json: nil receiver")
 	ErrNotBool               = erorr.Error("json: not bool")
 	ErrNotJSONNumber         = erorr.Error("json: not JSON number")
 )
 
 const (
 	errBadReflection                      = erorr.Error("json: bad reflection")
-	errNilReceiver                        = erorr.Error("json: nil receiver")
 	errNoBytes                            = erorr.Error("json: no bytes")
 	errNotStringMissingBeginQuotationMark = erorr.Error("json: not string — missing begin quotation-mark")
 	errNotStringMissingEndQuotationMark   = erorr.Error("json: not string — missing end quotation-mark")

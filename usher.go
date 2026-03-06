@@ -25,7 +25,7 @@ type Usher struct {
 
 func (receiver *Usher) ImplantModifier(name string, marshalFn ModifierFunc, unmarshalFn ModifierFunc) {
 	if nil == receiver {
-		panic(errNilReceiver)
+		panic(ErrNilReceiver)
 	}
 
 	receiver.modifierFuncs.Let(func(modifiers *map[string]modifierPair){
