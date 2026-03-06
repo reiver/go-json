@@ -5,8 +5,9 @@ import (
 )
 
 const (
-	ErrNotBool       = erorr.Error("json: not bool")
-	ErrNotJSONNumber = erorr.Error("json: not JSON number")
+	ErrModifierNotReversible = erorr.Error("json: modifier is not reversible")
+	ErrNotBool               = erorr.Error("json: not bool")
+	ErrNotJSONNumber         = erorr.Error("json: not JSON number")
 )
 
 const (
