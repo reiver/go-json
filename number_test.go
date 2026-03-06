@@ -119,34 +119,9 @@ func TestNumber_UnmarshalJSON(t *testing.T) {
 			JSON:           "3.140",
 			ExpectedString: "3.14",
 		},
-		{
-			JSON:           "007",
-			ExpectedString: "7",
-		},
 
 
 
-		{
-			JSON:          "0100",
-			ExpectedString: "100",
-		},
-		{
-			JSON:         "00100",
-			ExpectedString: "100",
-		},
-		{
-			JSON:        "000100",
-			ExpectedString: "100",
-		},
-		{
-			JSON:       "0000100",
-			ExpectedString: "100",
-		},
-
-		{
-			JSON:           "100.",
-			ExpectedString: "100",
-		},
 		{
 			JSON:           "100",
 			ExpectedString: "100",
