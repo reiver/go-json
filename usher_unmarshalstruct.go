@@ -303,17 +303,3 @@ func parseJSONValueAs(raw []byte, exemplar any) (any, error) {
 		return nil, erorr.Errorf("json: unsupported const type %T", exemplar)
 	}
 }
-
-type signedInt interface {
-	~int | ~int8 | ~int16 | ~int32 | ~int64
-}
-
-func parseJSONInt[T signedInt](data []byte) (any, error) {
-	var zero T
-	bitSize := int(reflect.TypeOf(zero).Size()) * 8
-	n, err := strconv.ParseInt(string(data), 10, bitSize)
-	if nil != err {
-		return nil, err
-	}
-	return T(n), nil
-}
