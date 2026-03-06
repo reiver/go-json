@@ -106,7 +106,55 @@ func (receiver *Usher) unmarshalStruct(
 
 			// Regular field: recursively unmarshal.
 			fieldValue := dst.Field(sf.index)
-			err = receiver.unmarshalValue(sc, fieldValue, mode, path, errs)
+			if len(sf.modifiers) > 0 {
+				// Apply reverse modifiers: read the raw value, transform it, then unmarshal.
+				raw, rawErr := sc.scanRawValue()
+				if nil != rawErr {
+					return rawErr
+				}
+
+				for i := len(sf.modifiers) - 1; i >= 0; i-- {
+					modifierName := sf.modifiers[i]
+					if "" == modifierName {
+						continue
+					}
+
+					var fn ModifierFunc
+					var found bool
+					receiver.modifierFuncs.Let(func(m *map[string]modifierPair){
+						if nil == m {
+							return
+						}
+						if nil == *m {
+							return
+						}
+
+						pair, ok := (*m)[modifierName]
+						if ok {
+							found = true
+							fn = pair.unmarshal
+						}
+					})
+
+					if !found {
+						continue
+					}
+					if nil == fn {
+						return ErrModifierNotReversible
+					}
+
+					raw, rawErr = fn(raw)
+					if nil != rawErr {
+						return erorr.Errorf("json: problem applying reverse modifier %q during unmarshal: %w", modifierName, rawErr)
+					}
+				}
+
+				permissive := mode == unmarshalModeUnobstructed
+				fieldSc := newScanner(raw, permissive)
+				err = receiver.unmarshalValue(fieldSc, fieldValue, mode, path, errs)
+			} else {
+				err = receiver.unmarshalValue(sc, fieldValue, mode, path, errs)
+			}
 			if nil != err {
 				return err
 			}

@@ -8,6 +8,6 @@ var (
 )
 
 func init() {
-	DefaultUsher.ImplantModifier("string", StringModifierFunc)
-	DefaultUsher.ImplantModifier("bare", BareModifierFunc)
+	DefaultUsher.ImplantModifier("string", StringModifierFunc, BareModifierFunc)
+	DefaultUsher.ImplantModifier("bare", BareModifierFunc, StringModifierFunc)
 }

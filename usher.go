@@ -10,32 +10,36 @@ import (
 //
 //	var jsonUsher json.Usher
 //
-//	jsonUsher.ImplantModifier("string", json.StringModifierFunc)
+//	jsonUsher.ImplantModifier("string", json.StringModifierFunc, json.BareModifierFunc)
+//
+// (Note that [BareModifierFunc] is also included because it is the inverse-operation to [StringModifierFunc].)
 //
 // You can also add your own modifiers:
 //
 //	var jsonUsher json.Usher
 //
-//	jsonUsher.ImplantModifier("digest", digestFunc)
+//	jsonUsher.ImplantModifier("digest", digestFunc, nil)
 type Usher struct {
-	modifierFuncs lck.Lockable[map[string]ModifierFunc]
+	modifierFuncs lck.Lockable[map[string]modifierPair]
 }
 
-func (receiver *Usher) ImplantModifier(name string, fn ModifierFunc) {
+func (receiver *Usher) ImplantModifier(name string, marshalFn ModifierFunc, unmarshalFn ModifierFunc) {
 	if nil == receiver {
 		panic(errNilReceiver)
 	}
 
-	receiver.modifierFuncs.Let(func(modifiers *map[string]ModifierFunc){
+	receiver.modifierFuncs.Let(func(modifiers *map[string]modifierPair){
 		if nil == *modifiers {
-			*modifiers = map[string]ModifierFunc{}
+			*modifiers = map[string]modifierPair{}
 		}
 
-		switch fn {
-		case nil:
+		if nil == marshalFn && nil == unmarshalFn {
 			delete(*modifiers, name)
-		default:
-			(*modifiers)[name] = fn
+		} else {
+			(*modifiers)[name] = modifierPair{
+				marshal:   marshalFn,
+				unmarshal: unmarshalFn,
+			}
 		}
 	})
 }

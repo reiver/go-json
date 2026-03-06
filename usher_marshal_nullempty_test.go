@@ -262,7 +262,7 @@ func TestUsher_Marshal_nullemptyErrorEmpty(t *testing.T) {
 		var usher json.Usher
 		usher.ImplantModifier("emptymod", func([]byte) ([]byte, error) {
 			return nil, json.ErrEmpty("test empty")
-		})
+		}, nil)
 
 		actual, err := usher.Marshal(test.Source)
 		if nil != err {

@@ -173,7 +173,7 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 						}
 
 						var fn ModifierFunc
-						receiver.modifierFuncs.Let(func(m *map[string]ModifierFunc){
+						receiver.modifierFuncs.Let(func(m *map[string]modifierPair){
 							if nil == m {
 								return
 							}
@@ -181,7 +181,10 @@ func (receiver *Usher) marshalStruct(value any) ([]byte, error) {
 								return
 							}
 
-							fn = (*m)[modifierName]
+							pair, ok := (*m)[modifierName]
+							if ok {
+								fn = pair.marshal
+							}
 						})
 
 						if nil != fn {
