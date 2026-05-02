@@ -105,7 +105,7 @@ func (receiver *Usher) unmarshalStruct(
 			}
 
 			// Regular field: recursively unmarshal.
-			fieldValue := dst.Field(sf.index)
+			fieldValue := fieldByIndexPath(dst, sf.indexPath)
 			if len(sf.modifiers) > 0 {
 				// Apply reverse modifiers: read the raw value, transform it, then unmarshal.
 				raw, rawErr := sc.scanRawValue()

@@ -469,6 +469,97 @@ func TestMarshal_struct(t *testing.T) {
 			},
 			Expected: `{"once":"not empty","end":"here"}`,
 		},
+
+
+
+		// embedded struct: fields should be flattened
+		{
+			Value: struct {
+				ID string `json:"id"`
+				Inner
+			}{
+				ID: "abc",
+				Inner: Inner{
+					Name: "hello",
+				},
+			},
+			Expected: `{"id":"abc","name":"hello"}`,
+		},
+
+		// embedded struct: empty embedded fields omitted with omitempty
+		{
+			Value: struct {
+				ID string `json:"id"`
+				InnerOmit
+			}{
+				ID: "abc",
+			},
+			Expected: `{"id":"abc"}`,
+		},
+
+		// embedded struct: non-empty embedded fields included with omitempty
+		{
+			Value: struct {
+				ID string `json:"id"`
+				InnerOmit
+			}{
+				ID: "abc",
+				InnerOmit: InnerOmit{
+					Name:  "hello",
+					Value: 42,
+				},
+			},
+			Expected: `{"id":"abc","name":"hello","value":42}`,
+		},
+
+		// embedded struct: multiple embedded structs flattened in order
+		{
+			Value: struct {
+				ID string `json:"id"`
+				Inner
+				Inner2
+			}{
+				ID: "abc",
+				Inner: Inner{
+					Name: "hello",
+				},
+				Inner2: Inner2{
+					Color: "red",
+				},
+			},
+			Expected: `{"id":"abc","name":"hello","color":"red"}`,
+		},
+
+		// nested embedded structs: two levels deep
+		{
+			Value: struct {
+				ID string `json:"id"`
+				Outer
+			}{
+				ID: "abc",
+				Outer: Outer{
+					Inner: Inner{
+						Name: "hello",
+					},
+					Label: "world",
+				},
+			},
+			Expected: `{"id":"abc","name":"hello","label":"world"}`,
+		},
+
+		// embedded struct: partial omitempty in embedded fields
+		{
+			Value: struct {
+				ID string `json:"id"`
+				InnerOmit
+			}{
+				ID: "abc",
+				InnerOmit: InnerOmit{
+					Name: "hello",
+				},
+			},
+			Expected: `{"id":"abc","name":"hello"}`,
+		},
 	}
 
 	for testNumber, test := range tests {

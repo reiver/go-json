@@ -14,6 +14,7 @@ var (
 // relevant to unmarshaling.
 type structField struct {
 	index        int
+	indexPath    []int    // full path of field indices through embedded structs
 	name         string   // JSON key name (from tag or Go field name)
 	skip         bool     // json:"-"
 	omitempty    bool
@@ -23,6 +24,14 @@ type structField struct {
 	isConst      bool   // implements Constantizer
 	constTag     string // value of json.value tag (for Const[T])
 	isOmitAlways bool   // implements OmitAlways
+}
+
+// fieldByIndexPath traverses a reflect.Value using the index path to reach the target field.
+func fieldByIndexPath(v reflect.Value, path []int) reflect.Value {
+	for _, idx := range path {
+		v = v.Field(idx)
+	}
+	return v
 }
 
 // structInfo holds cached information about a struct type's fields.
@@ -46,21 +55,41 @@ func getStructInfo(t reflect.Type) *structInfo {
 
 // buildStructInfo computes struct field information from a reflect.Type.
 func buildStructInfo(t reflect.Type) *structInfo {
-	numFields := t.NumField()
-
 	info := &structInfo{
-		fields:    make([]structField, 0, numFields),
-		nameIndex: make(map[string]int, numFields),
+		fields:    make([]structField, 0, t.NumField()),
+		nameIndex: make(map[string]int, t.NumField()),
 	}
 
-	for i := 0; i < numFields; i++ {
+	collectFields(t, info, nil)
+
+	return info
+}
+
+// collectFields recursively collects struct fields, flattening anonymous (embedded) struct fields.
+// indexPath tracks the chain of field indices needed to reach a field through nested embeddings.
+func collectFields(t reflect.Type, info *structInfo, indexPath []int) {
+	for i := 0; i < t.NumField(); i++ {
 		rf := t.Field(i)
 		if !rf.IsExported() {
 			continue
 		}
 
+		// If the field is an anonymous (embedded) struct, recurse into it.
+		if rf.Anonymous && rf.Type.Kind() == reflect.Struct {
+			// Check if it implements OmitAlways — if so, skip.
+			if rf.Type.Implements(omitAlwaysType) || reflect.PointerTo(rf.Type).Implements(omitAlwaysType) {
+				continue
+			}
+
+			collectFields(rf.Type, info, append(append([]int(nil), indexPath...), i))
+			continue
+		}
+
+		fullPath := append(append([]int(nil), indexPath...), i)
+
 		sf := structField{
 			index:     i,
+			indexPath: fullPath,
 			name:      rf.Name,
 			fieldType: rf.Type,
 		}
@@ -94,6 +123,4 @@ func buildStructInfo(t reflect.Type) *structInfo {
 		info.fields = append(info.fields, sf)
 		info.nameIndex[sf.name] = idx
 	}
-
-	return info
 }

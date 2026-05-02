@@ -149,6 +149,92 @@ func TestUnmarshal_struct(t *testing.T) {
 				Banana: -1,
 			},
 		},
+
+
+		// embedded struct: fields should be flattened
+		{
+			Bytes: []byte(`{"id":"abc","name":"hello"}`),
+			Dst: func() any {
+				return &struct {
+					ID string `json:"id"`
+					Inner
+				}{}
+			},
+			Expected: struct {
+				ID string `json:"id"`
+				Inner
+			}{
+				ID: "abc",
+				Inner: Inner{
+					Name: "hello",
+				},
+			},
+		},
+
+		// embedded struct: multiple embedded structs
+		{
+			Bytes: []byte(`{"id":"abc","name":"hello","color":"red"}`),
+			Dst: func() any {
+				return &struct {
+					ID string `json:"id"`
+					Inner
+					Inner2
+				}{}
+			},
+			Expected: struct {
+				ID string `json:"id"`
+				Inner
+				Inner2
+			}{
+				ID: "abc",
+				Inner: Inner{
+					Name: "hello",
+				},
+				Inner2: Inner2{
+					Color: "red",
+				},
+			},
+		},
+
+		// nested embedded structs: two levels deep
+		{
+			Bytes: []byte(`{"id":"abc","name":"hello","label":"world"}`),
+			Dst: func() any {
+				return &struct {
+					ID string `json:"id"`
+					Outer
+				}{}
+			},
+			Expected: struct {
+				ID string `json:"id"`
+				Outer
+			}{
+				ID: "abc",
+				Outer: Outer{
+					Inner: Inner{
+						Name: "hello",
+					},
+					Label: "world",
+				},
+			},
+		},
+
+		// embedded struct: missing fields in JSON
+		{
+			Bytes: []byte(`{"id":"abc"}`),
+			Dst: func() any {
+				return &struct {
+					ID string `json:"id"`
+					Inner
+				}{}
+			},
+			Expected: struct {
+				ID string `json:"id"`
+				Inner
+			}{
+				ID: "abc",
+			},
+		},
 	}
 
 	for testNumber, test := range tests {
